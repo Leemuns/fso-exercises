@@ -8,6 +8,33 @@ const Button = ({onClick, text}) => {
   )
 }
 
+const Statistics = ({good, neutral, bad}) => {
+  function calcPositivePercent() {
+    const totalSum = good + neutral + bad
+    const positivePercent = good / totalSum
+
+    let percentText = '';
+    if (totalSum) {
+      percentText = `${positivePercent * 100} %`
+    } else {
+      percentText = 'No feedback given yet.'
+    }
+
+    return percentText
+  }
+
+  return (
+    <>
+      <StatsLine text="good" val={good} />
+      <StatsLine text="neutral" val={neutral} />
+      <StatsLine text="bad" val={bad} />
+      <StatsLine text="all" val={good + neutral + bad} />
+      <StatsLine text="average" val={(good - bad) / (good + neutral + bad)} />
+      <StatsLine text="positive" val={calcPositivePercent()}/>
+    </>
+  )
+}
+
 const StatsLine = ({text, val}) => {
   return (
     <>
@@ -26,20 +53,6 @@ const App = () => {
     setterFn(category + 1)
   }
 
-  function calcPositivePercent() {
-    const totalSum = good + neutral + bad
-    const positivePercent = good / totalSum
-
-    let percentText = '';
-    if (totalSum) {
-      percentText = `${positivePercent * 100} %`
-    } else {
-      percentText = 'No feedback given yet.'
-    }
-
-    return percentText
-  }
-
   return (
     <div>
       <h1>give feedback</h1>
@@ -50,12 +63,7 @@ const App = () => {
 
       <h1>statistics</h1>
 
-      <StatsLine text="good" val={good} />
-      <StatsLine text="neutral" val={neutral} />
-      <StatsLine text="bad" val={bad} />
-      <StatsLine text="all" val={good + neutral + bad} />
-      <StatsLine text="average" val={(good - bad) / (good + neutral + bad)} />
-      <StatsLine text="positive" val={calcPositivePercent()}/>
+      <Statistics good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
