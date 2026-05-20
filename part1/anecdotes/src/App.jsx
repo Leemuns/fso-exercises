@@ -34,12 +34,25 @@ const App = () => {
     setVotes(votesCopy)
   }
 
+  const getMostVotesId = () => {
+    return votes.reduce(
+      (acc, cur, i) => votes[acc] > cur ? acc : i
+      , 0
+    )
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
+
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Button onClick={() => voteAnecdote(selected)} text="vote" />
       <Button onClick={() => nextAnectode()} text="next anecdote" />
+
+      <h1>Anecdote with most votes</h1>
+
+      <p>{anecdotes[getMostVotesId()]}</p>
     </div>
   )
 }
