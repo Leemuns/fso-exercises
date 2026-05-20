@@ -46,9 +46,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
-  const incrementCategory = (category, setterFn) => {
-    setterFn(category + 1)
-  }
+  const incrementCategory = (category, setterFn) => setterFn(category + 1)
 
   return (
     <div>
