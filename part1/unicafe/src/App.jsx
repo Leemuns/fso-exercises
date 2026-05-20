@@ -9,18 +9,15 @@ const Button = ({onClick, text}) => {
 }
 
 const Statistics = ({good, neutral, bad}) => {
-  function calcPositivePercent() {
-    const totalSum = good + neutral + bad
-    const positivePercent = good / totalSum
-
-    let percentText = '';
-    if (totalSum) {
-      percentText = `${positivePercent * 100} %`
-    } else {
-      percentText = 'No feedback given yet.'
-    }
-
-    return percentText
+  const totalSum = good + neutral + bad
+  const positivePercent = good / totalSum
+  
+  if (!totalSum) {
+    return (
+      <>
+        <p>No feedback given</p>
+      </>
+    )
   }
 
   return (
@@ -30,7 +27,7 @@ const Statistics = ({good, neutral, bad}) => {
       <StatsLine text="bad" val={bad} />
       <StatsLine text="all" val={good + neutral + bad} />
       <StatsLine text="average" val={(good - bad) / (good + neutral + bad)} />
-      <StatsLine text="positive" val={calcPositivePercent()}/>
+      <StatsLine text="positive" val={`${positivePercent * 100} %`}/>
     </>
   )
 }
