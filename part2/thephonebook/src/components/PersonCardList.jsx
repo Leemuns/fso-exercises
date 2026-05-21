@@ -2,7 +2,7 @@ const PersonCardList = ({persons, nameFilter}) => {
   nameFilter = nameFilter.toLowerCase()
   return (
     <div>{
-      persons.filter(person => person.name.includes(nameFilter))
+      persons.filter(person => person.name.toLowerCase().includes(nameFilter))
         .map(person => <Person key={person.id} person={person}/>)
     }</div>
   )
