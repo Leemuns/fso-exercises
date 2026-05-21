@@ -1,28 +1,24 @@
 import { useState } from 'react'
+import PersonsCardList from './components/PersonsCardList.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { id: '1', name: 'Arto Hellas' }
+    { id: '1', name: 'Arto Hellas', number: '040-1234567'}
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   const addPerson = (event) => {
     event.preventDefault();
-
     if (persons.reduce((isAdded, person) => isAdded || person.name === newName, false)) {
       alert(`${newName} is already added to the phonebook`)
       return
     }
-
     setPersons(persons.concat({
       id: String(persons.length + 1),
       name: newName,
+      number: newNumber
     }));
-    console.log(persons)
-  }
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
   }
 
   return (
@@ -31,7 +27,10 @@ const App = () => {
 
       <form onSubmit={addPerson}>
         <div>
-          name: <input value={newName} onChange={handleNameChange}/>
+          name: <input value={newName} onChange={event => setNewName(event.target.value)}/>
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={event => setNewNumber(event.target.value)}/>
         </div>
         <div>
           <button type="submit">add</button>
@@ -40,9 +39,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       
-      <div>
-        {persons.map(person => <p key={person.id}>{person.name}</p>)}
-      </div>
+      <PersonsCardList persons={persons}/>
     </div>
   )
 }
