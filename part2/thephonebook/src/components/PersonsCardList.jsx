@@ -1,8 +1,10 @@
-const PersonsCardList = ({persons}) => {
+const PersonsCardList = ({persons, nameFilter}) => {
+  nameFilter = nameFilter.toLowerCase()
   return (
-    <div>
-      {persons.map(person => <Person key={person.id} person={person}/>)}
-    </div>
+    <div>{
+      persons.filter(person => person.name.includes(nameFilter))
+        .map(person => <Person key={person.id} person={person}/>)
+    }</div>
   )
 }
 
