@@ -1,4 +1,4 @@
-const PersonsCardList = ({persons, nameFilter}) => {
+const PersonCardList = ({persons, nameFilter}) => {
   nameFilter = nameFilter.toLowerCase()
   return (
     <div>{
@@ -10,4 +10,4 @@ const PersonsCardList = ({persons, nameFilter}) => {
 
 const Person = ({person}) => <p>{person.name} {person.number}</p>
 
-export default PersonsCardList
+export default PersonCardList

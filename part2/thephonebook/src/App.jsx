@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import PersonsCardList from './components/PersonsCardList.jsx'
+import Filter from './components/Filter.jsx'
+import PersonForm from './components/PersonForm.jsx'
+import PersonCardList from './components/PersonCardList.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -12,36 +14,16 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
 
-  const addPerson = (event) => {
-    event.preventDefault();
-    if (persons.reduce((isAdded, person) => isAdded || person.name === newName, false)) {
-      alert(`${newName} is already added to the phonebook`)
-      return
-    }
-    setPersons(persons.concat({
-      name: newName,
-      number: newNumber,
-      id: String(persons.length + 1)
-    }));
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={nameFilter} onChange={event => setNameFilter(event.target.value)}/>
-      </div>
+      <Filter value={nameFilter} onChange={setNameFilter}/>
 
       <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>name: <input value={newName} onChange={event => setNewName(event.target.value)}/></div>
-        <div>number: <input value={newNumber} onChange={event => setNewNumber(event.target.value)}/></div>
-        <div><button type="submit">add</button></div>
-      </form>
+      <PersonForm persons={persons} setPersons={setPersons} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
 
       <h2>Numbers</h2>
-      
-      <PersonsCardList persons={persons} nameFilter={nameFilter}/>
+      <PersonCardList persons={persons} nameFilter={nameFilter}/>
     </div>
   )
 }
