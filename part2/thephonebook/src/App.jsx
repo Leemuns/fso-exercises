@@ -6,11 +6,13 @@ import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import PersonCardList from './components/PersonCardList.jsx'
 import person from './services/persons.jsx'
+import Notification from './components/Notification.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newPerson, setNewPerson] = useState({ name: '', number: '' })
   const [nameFilter, setNameFilter] = useState('')
+  const [notifMessage, setNotifMessage] = useState(null)
 
   useEffect(() => {
     personsServices
@@ -21,6 +23,11 @@ const App = () => {
   }, [])
 
   const addPerson = (event) => {
+    const displayNotification = (message) => {
+      setNotifMessage(message)
+      setTimeout(() => setNotifMessage(null), 5000)
+    }
+
     event.preventDefault();
     if (!newPerson.name || !newPerson.number) {
       alert(`New Person details cannot be empty.`)
@@ -28,8 +35,6 @@ const App = () => {
     }
     
     const matchedPerson = persons.reduce((matchedPerson, person) => person.name === newPerson.name ? person : matchedPerson, null)
-    console.log(matchedPerson);
-    
     if (matchedPerson) {
       const confirmMsg = `${matchedPerson.name} is already added to the phonebook, replace the old number with a new one?`
       if (window.confirm(confirmMsg)) {
@@ -37,6 +42,8 @@ const App = () => {
           .update(matchedPerson.id, newPerson)
           .then(updatedPerson => {
             setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person))
+            setNewPerson({ name: '', number: '' })
+            displayNotification(`Changed ${updatedPerson.name}'s number`)
           })
       }
       return
@@ -47,6 +54,7 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setNewPerson({ name: '', number: '' })
+        displayNotification(`Added ${returnedPerson.name}`)
       })
   }
 
@@ -64,6 +72,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notifMessage}/>
       <Filter value={nameFilter} onChange={setNameFilter}/>
 
       <h2>Add a new</h2>
