@@ -44,6 +44,13 @@ const App = () => {
             setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person))
             setNewPerson({ name: '', number: '' })
             displayNotification(`Changed ${updatedPerson.name}'s number`)
+          }).catch(error => {
+            displayNotification(`Error: Information of ${matchedPerson.name} has already been removed from server`)
+            personsServices
+              .getAll()
+              .then(initialPersons => {
+                setPersons(initialPersons)
+              })
           })
       }
       return
