@@ -26,9 +26,19 @@ const App = () => {
       alert(`New Person details cannot be empty.`)
       return
     }
-
-    if (persons.reduce((isAdded, person) => isAdded || person.name === newPerson.name, false)) {
-      alert(`${newPerson.name} is already added to the phonebook.`)
+    
+    const matchedPerson = persons.reduce((matchedPerson, person) => person.name === newPerson.name ? person : matchedPerson, null)
+    console.log(matchedPerson);
+    
+    if (matchedPerson) {
+      const confirmMsg = `${matchedPerson.name} is already added to the phonebook, replace the old number with a new one?`
+      if (window.confirm(confirmMsg)) {
+        personsServices
+          .update(matchedPerson.id, newPerson)
+          .then(updatedPerson => {
+            setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person))
+          })
+      }
       return
     }
 
@@ -41,7 +51,7 @@ const App = () => {
   }
 
   const removePerson = (personId) => {
-    const matchedPerson = persons.reduce((matchedPerson, cur) => cur.id === personId ? cur : matchedPerson, {})
+    const matchedPerson = persons.reduce((matchedPerson, person) => person.id === personId ? person : matchedPerson, {})
     if (window.confirm(`Delete ${matchedPerson.name}`)) {
       personsServices
         .remove(personId)
