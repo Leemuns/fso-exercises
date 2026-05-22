@@ -41,11 +41,14 @@ const App = () => {
   }
 
   const removePerson = (personId) => {
-    personsServices
-      .remove(personId)
-      .then(returnedPerson => {
-        setPersons(persons.filter(person => person.id !== returnedPerson.id))
-      })
+    const matchedPerson = persons.reduce((matchedPerson, cur) => cur.id === personId ? cur : matchedPerson, {})
+    if (window.confirm(`Delete ${matchedPerson.name}`)) {
+      personsServices
+        .remove(personId)
+        .then(returnedPerson => {
+          setPersons(persons.filter(person => person.id !== returnedPerson.id))
+        })
+    }
   }
 
   return (
