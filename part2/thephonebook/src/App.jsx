@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-import personsService from './services/persons.jsx'
+import personsServices from './services/persons.jsx'
 import Filter from './components/Filter.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import PersonCardList from './components/PersonCardList.jsx'
@@ -13,7 +13,7 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState('')
 
   useEffect(() => {
-    personsService
+    personsServices
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
@@ -32,11 +32,19 @@ const App = () => {
       return
     }
 
-    personsService
+    personsServices
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setNewPerson({ name: '', number: '' })
+      })
+  }
+
+  const removePerson = (personId) => {
+    personsServices
+      .remove(personId)
+      .then(returnedPerson => {
+        setPersons(persons.filter(person => person.id !== returnedPerson.id))
       })
   }
 
@@ -49,7 +57,7 @@ const App = () => {
       <PersonForm onSubmit={addPerson} newPerson={newPerson} setNewPerson={setNewPerson}/>
 
       <h2>Numbers</h2>
-      <PersonCardList persons={persons} nameFilter={nameFilter}/>
+      <PersonCardList onClickRemove={removePerson} persons={persons} nameFilter={nameFilter}/>
     </div>
   )
 }

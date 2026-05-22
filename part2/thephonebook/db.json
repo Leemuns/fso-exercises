@@ -21,44 +21,9 @@
       "id": "4"
     },
     {
-      "name": "test",
-      "number": "123",
-      "id": "ZINnJ99dJwY"
-    },
-    {
-      "name": "resr1",
-      "number": "12345",
-      "id": "_sTnQhqxPrQ"
-    },
-    {
-      "name": "test2",
-      "number": "76544444",
-      "id": "M_BGcRIkrnI"
-    },
-    {
-      "name": "test3",
-      "number": "234",
-      "id": "AdVlsRLGZgA"
-    },
-    {
-      "name": "test4",
-      "number": "123412341234",
-      "id": "rQKD02B0Zis"
-    },
-    {
-      "name": "test5",
-      "number": "22222",
-      "id": "Ns5t35B4MQg"
-    },
-    {
-      "name": "test6",
-      "number": "55555555555",
-      "id": "UoVf6siRuWQ"
-    },
-    {
-      "name": "test7",
+      "name": "test1",
       "number": "1234",
-      "id": "sml-B1qHl0U"
+      "id": "FnKe0x5Wgig"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
