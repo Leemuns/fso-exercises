@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-const persons = [
+let persons = [
   { 
     "id": "1",
     "name": "Arto Hellas", 
@@ -49,6 +49,45 @@ app.get('/api/persons/:id', (req, res) => {
   } else {
     res.status(404).end()
   }
+})
+
+// tested with Postman
+app.delete('/api/persons/:id', (req, res) => {
+  persons = persons.filter(person => person.id !== req.params.id)
+  res.status(204).end()
+})
+
+const generateId = () => {
+  let id = 0
+  const idList = persons.map(person => person.id)
+
+  do {
+    id = Math.floor(Math.random() * 1000)
+  } while (idList.includes(id)) 
+
+  return `${id}`
+}
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  if (!body) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    })
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number
+  }
+
+  console.log(person)
+
+  persons = persons.concat(person)
+
+  res.json(person)
 })
 
 const PORT = 3001
