@@ -71,9 +71,13 @@ const generateId = () => {
 app.post('/api/persons', (req, res) => {
   const body = req.body
 
-  if (!body) {
-    return response.status(400).json({ 
-      error: 'content missing' 
+  if (!body.name || !body.number) {
+    return res.status(400).json({ 
+      error: 'field "name" or "number" missing' 
+    })
+  } else if (persons.map(person => person.name).includes(body.name)) {
+    return res.status(400).json({
+      error: 'name must be unique'
     })
   }
 
@@ -82,8 +86,6 @@ app.post('/api/persons', (req, res) => {
     name: body.name,
     number: body.number
   }
-
-  console.log(person)
 
   persons = persons.concat(person)
 
