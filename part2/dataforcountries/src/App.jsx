@@ -9,6 +9,11 @@ function App() {
   const [value, setValue] = useState('')
   const [countryFilter, setCountryFilter] = useState('')
 
+  const onShow = (countryName) => {
+    countriesServices.getOne(countryName)
+      .then(response => setCountries([response]))
+  }
+
   const onFind = (event) => {
     event.preventDefault()
     setCountryFilter(value)
@@ -27,7 +32,7 @@ function App() {
   return (
     <div>
       <Filter text="find countries " value={value} onChange={setValue} onFind={onFind}/>
-      <CountryDisplay countries={countries}/>
+      <CountryDisplay countries={countries} onShow={onShow}/>
     </div>
   )
 }

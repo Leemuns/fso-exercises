@@ -1,6 +1,6 @@
 import Country from './Country.jsx'
 
-const CountryDisplay = ({countries}) => {
+const CountryDisplay = ({countries, onShow}) => {
   if (!countries) {
     return (
       <div>
@@ -22,7 +22,10 @@ const CountryDisplay = ({countries}) => {
   } else if (countries.length <= 10) {
     return (
       <div>
-        {countries.map(country => <div key={country.cca2}>{country.name.common}</div>)}
+        {countries.map(country => <div key={country.cca2}>
+          {country.name.common}{' '}
+          <button onClick={() => onShow(country.name.common)}>Show</button>
+        </div>)}
       </div>
     )
   } else {

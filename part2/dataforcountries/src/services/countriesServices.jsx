@@ -13,4 +13,11 @@ const getFiltered = countryFilter => {
     .then(response => response.data.filter(country => country.name.common.toLowerCase().includes(countryFilter.toLowerCase())))
 }
 
-export default { getAll, getFiltered }
+const getOne = countryName => {
+  return axios
+    .get(`${baseUrl}/name/${countryName}`)
+    .then(response => response.data)
+
+}
+
+export default { getAll, getFiltered, getOne }
