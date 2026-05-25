@@ -37,22 +37,25 @@ const App = () => {
     const matchedPerson = persons.reduce((matchedPerson, person) => person.name === newPerson.name ? person : matchedPerson, null)
     if (matchedPerson) {
       const confirmMsg = `${matchedPerson.name} is already added to the phonebook, replace the old number with a new one?`
-      if (window.confirm(confirmMsg)) {
-        personsServices
-          .update(matchedPerson.id, newPerson)
-          .then(updatedPerson => {
-            setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person))
-            setNewPerson({ name: '', number: '' })
-            displayNotification(`Changed ${updatedPerson.name}'s number`)
-          }).catch(error => {
-            displayNotification(`Error: Information of ${matchedPerson.name} has already been removed from server`)
-            personsServices
-              .getAll()
-              .then(initialPersons => {
-                setPersons(initialPersons)
-              })
-          })
+      if (!window.confirm(confirmMsg)) {
+        return
       }
+
+      personsServices
+        .update(matchedPerson.id, newPerson)
+        .then(updatedPerson => {
+          setPersons(persons.map(person => person.id === updatedPerson.id ? updatedPerson : person))
+          setNewPerson({ name: '', number: '' })
+          displayNotification(`Changed ${updatedPerson.name}'s number`)
+        }).catch(error => {
+          displayNotification(`Error: Information of ${matchedPerson.name} has already been removed from server`)
+          personsServices
+            .getAll()
+            .then(initialPersons => {
+              setPersons(initialPersons)
+            })
+        })
+        
       return
     }
 

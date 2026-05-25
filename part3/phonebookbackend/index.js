@@ -6,8 +6,6 @@ const Person = require('./models/person')
 
 const app = express()
 
-let persons = []
-
 morgan.token('body', (req, res) => { return JSON.stringify(req.body) })
 
 app.use(express.json())
@@ -18,42 +16,55 @@ app.get('/', (req, res) => {
   res.end()
 })
 
-app.get('/info', (req, res) => {
-  res.send(`
-    <div>Phonebook has info for ${persons.length} people</div>
-    <div>${Date()}</div>
-  `)
+app.get('/info', (req, res, next) => {
+  Person.countDocuments({})
+    .then( totalDocuments => {
+      res.send(`
+        <div>Phonebook has info for ${totalDocuments} people</div>
+        <div>${Date()}</div>
+      `)
+    })
+    .catch(error => next(error))
+  
 })
 
-app.get('/api/persons', (req, res) => {
-  Person.find({}).then(persons => {
-    res.json(persons)
-  })
+app.get('/api/persons', (req, res, next) => {
+  Person.find({})
+    .then(persons => res.json(persons))
+    .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  Person.findById(req.params.id).then(person => {
-    res.json(person)
-  })
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => res.json(person))
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-  persons = persons.filter(person => person.id !== req.params.id)
-  res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
-const generateId = () => {
-  let id = 0
-  const idList = persons.map(person => person.id)
+app.put('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      if (!person) {
+        return res.status(404).end()
+      }
 
-  do {
-    id = Math.floor(Math.random() * 1000)
-  } while (idList.includes(id)) 
+      person.number = req.body.number
 
-  return `${id}`
-}
+      return person.save().then( updatedPerson => {
+        res.json(updatedPerson)
+      })
+    })
+    .catch(error => next(error))
+})
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if (!body.name || !body.number) {
@@ -71,10 +82,22 @@ app.post('/api/persons', (req, res) => {
     number: body.number
   })
 
-  person.save().then(savedPerson => {
-    res.json(savedPerson)
-  })
+  person.save()
+    .then(savedPerson => res.json(savedPerson))
+    .catch(error => next(error))
 })
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
