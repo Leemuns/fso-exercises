@@ -48,12 +48,16 @@ const App = () => {
           setNewPerson({ name: '', number: '' })
           displayNotification(`Changed ${updatedPerson.name}'s number`)
         }).catch(error => {
-          displayNotification(`Error: Information of ${matchedPerson.name} has already been removed from server`)
-          personsServices
-            .getAll()
-            .then(initialPersons => {
-              setPersons(initialPersons)
-            })
+          if (error.response === undefined) {
+            displayNotification(`Error! ${error.response.data.error}`)
+          } else {
+            displayNotification(`Error! Information of ${matchedPerson.name} has already been removed from server`)
+            personsServices
+              .getAll()
+              .then(initialPersons => {
+                setPersons(initialPersons)
+              })
+          }
         })
         
       return
@@ -67,7 +71,7 @@ const App = () => {
         displayNotification(`Added ${returnedPerson.name}`)
       })
       .catch(error => {
-        displayNotification(`Error: ${error.response.data.error}`)
+        displayNotification(`Error! ${error.response.data.error}`)
       })
   }
 

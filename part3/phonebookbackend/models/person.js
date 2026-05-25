@@ -12,15 +12,27 @@ mongoose.connect(url, { family: 4 })
     console.log('Error: ', res.message);
   })
 
+const validateNumber = number => {
+  if (number.length < 8) {
+    return false
+  }
+
+  return /\d{2,3}-\d+/.test(number)
+}
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: 3,
-    required: true,
+    required: [true, 'Person name required']
   },
   number: {
     type: String,
-    required: true,
+    validate: {
+      validator: validateNumber,
+      message: ({value}) => `${value} is not a valid phone number`
+    },
+    required: [true, 'Person phone number required']
   }
 })
 
