@@ -66,6 +66,9 @@ const App = () => {
         setNewPerson({ name: '', number: '' })
         displayNotification(`Added ${returnedPerson.name}`)
       })
+      .catch(error => {
+        displayNotification(`Error: ${error.response.data.error}`)
+      })
   }
 
   const removePerson = (personId) => {
