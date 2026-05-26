@@ -6,7 +6,7 @@ const Person = require('./models/person')
 
 const app = express()
 
-morgan.token('body', (req, res) => { return JSON.stringify(req.body) })
+morgan.token('body', (req) => { return JSON.stringify(req.body) })
 
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -25,7 +25,7 @@ app.get('/info', (req, res, next) => {
       `)
     })
     .catch(error => next(error))
-  
+
 })
 
 app.get('/api/persons', (req, res, next) => {
@@ -42,7 +42,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -68,10 +68,10 @@ app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   // if (!body.name || !body.number) {
-  //   return res.status(400).json({ 
-  //     error: 'field "name" or "number" missing' 
+  //   return res.status(400).json({
+  //     error: 'field "name" or "number" missing'
   //   })
-  // } 
+  // }
 
   const person = new Person({
     name: body.name,

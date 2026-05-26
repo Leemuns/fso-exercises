@@ -32,11 +32,11 @@ if (inputName) {
     number: inputNumber,
   })
 
-  person.save().then(result => {
+  person.save().then(() => {
     console.log(`Added ${inputName} number ${inputNumber} to phonebook`)
     mongoose.connection.close()
   })
-  
+
 } else {
   Person.find({}).then(result => {
     console.log('phonebook:')

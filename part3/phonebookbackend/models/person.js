@@ -5,11 +5,11 @@ const url = process.env.MONGODB_URI
 mongoose.set('strictQuery', false)
 
 mongoose.connect(url, { family: 4 })
-  .then( res => {
+  .then( () => {
     console.log('connected to MongoDB')
   })
   .catch( res => {
-    console.log('Error: ', res.message);
+    console.log('Error: ', res.message)
   })
 
 const validateNumber = number => {
@@ -30,7 +30,7 @@ const personSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: validateNumber,
-      message: ({value}) => `${value} is not a valid phone number`
+      message: ({ value }) => `${value} is not a valid phone number`
     },
     required: [true, 'Person phone number required']
   }
