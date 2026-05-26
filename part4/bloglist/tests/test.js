@@ -149,3 +149,28 @@ describe('most blogs', () => {
     assert.deepStrictEqual(result, authorMostBlogsMany)
   })
 })
+
+describe('most likes', () => {
+  const authorMostLikes = {
+    author: "Edsger W. Dijkstra",
+    likes: 17
+  }
+
+  let blogListManyResults = structuredClone(blogList)
+  blogListManyResults[4].likes = 5
+
+  test('of empty list is null', () => {
+    const result = listHelper.mostLikes([])
+    assert.deepStrictEqual(result, null)
+  })
+
+  test('of a list of multiple blogs, return an author with most likes as an object with their name and likes summed', () => {
+    const result = listHelper.mostLikes(blogList)
+    assert.deepStrictEqual(result, authorMostLikes)
+  })
+
+  test('when list has multiple authors with most likes, return the first after grouping', () => {
+    const result = listHelper.mostLikes(blogListManyResults)
+    assert.deepStrictEqual(result, authorMostLikes)
+  })
+})
