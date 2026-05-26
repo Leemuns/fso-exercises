@@ -113,3 +113,39 @@ describe('favorite blog', () => {
     assert.deepStrictEqual(result, blogWithMostLikes)
   })
 })
+
+describe('most blogs', () => {
+  const authorMostBlogs = {
+    author: "Robert C. Martin",
+    blogs: 3
+  }
+
+  const authorMostBlogsMany = {
+    author: "Edsger W. Dijkstra",
+    blogs: 3
+  }
+
+  const blogListManyResults = blogList.concat({
+    _id: "5a422b3a1b54a676234d17f0",
+    title: "Canonical string reduction (copy)",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+    likes: 12,
+    __v: 0
+  })
+
+  test('of empty list is null', () => {
+    const result = listHelper.mostBlogs([])
+    assert.deepStrictEqual(result, null)
+  })
+
+  test('of a list of multiple blogs, return an author with most blogs as an object with their name and blog count', () => {
+    const result = listHelper.mostBlogs(blogList)
+    assert.deepStrictEqual(result, authorMostBlogs)
+  })
+
+  test('when list has multiple authors with most blogs, return the first after grouping', () => {
+    const result = listHelper.mostBlogs(blogListManyResults)
+    assert.deepStrictEqual(result, authorMostBlogsMany)
+  })
+})
