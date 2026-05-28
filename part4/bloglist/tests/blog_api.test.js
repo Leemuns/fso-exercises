@@ -52,6 +52,24 @@ describe('POST /api/blogs', () => {
     assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
     assert.deepStrictEqual(addedBlog, newBlog)
   })
+
+  test('making an HTTP POST request with a newBlog missing the likes property will default to zero for it', async () => {
+    const newBlog = {
+      title: "New test note",
+      author: "System",
+      url: "https://idontexist.com/",
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const addedBlog = response.body.find(r => r.title === newBlog.title)
+
+    assert.deepStrictEqual(addedBlog.likes, 0)
+  })
 })
 
 after(async () => {
