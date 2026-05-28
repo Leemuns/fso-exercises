@@ -22,6 +22,13 @@ describe('GET /api/blogs', () => {
 
     assert.strictEqual(response.body.length, 6)
   })
+
+  test('unique identifier property of blog posts is named "id" and not "_id"', async () => {
+    const response = await api.get('/api/blogs')
+
+    assert(Object.keys(response.body[0]).includes('id'))
+
+  })
 })
 
 after(async () => {
