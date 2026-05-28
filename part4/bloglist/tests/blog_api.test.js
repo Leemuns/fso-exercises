@@ -34,9 +34,9 @@ describe('GET /api/blogs', () => {
 describe('POST /api/blogs', () => {
   test('making an HTTP POST request to the /api/blogs increases total number of blogs by one and correct saves its content', async () => {
     const newBlog = {
-      title: "New test note",
-      author: "System",
-      url: "https://idontexist.com/",
+      title: 'New test note',
+      author: 'System',
+      url: 'https://idontexist.com/',
       likes: 150
     }
 
@@ -55,9 +55,9 @@ describe('POST /api/blogs', () => {
 
   test('making an HTTP POST request with a newBlog missing the likes property will default to zero for it', async () => {
     const newBlog = {
-      title: "New test note",
-      author: "System",
-      url: "https://idontexist.com/",
+      title: 'New test note',
+      author: 'System',
+      url: 'https://idontexist.com/',
     }
 
     await api.post('/api/blogs')
@@ -73,8 +73,8 @@ describe('POST /api/blogs', () => {
 
   test('adding a newBlog without the title property will result in a response of 400 status code', async () => {
     const newBlog = {
-      author: "System",
-      url: "https://idontexist.com/",
+      author: 'System',
+      url: 'https://idontexist.com/',
     }
 
     await api.post('/api/blogs')
@@ -84,8 +84,8 @@ describe('POST /api/blogs', () => {
 
   test('adding a newBlog without the url property will result in a response of 400 status code', async () => {
     const newBlog = {
-      title: "New test note",
-      author: "System",
+      title: 'New test note',
+      author: 'System',
     }
 
     await api.post('/api/blogs')
@@ -108,6 +108,48 @@ describe('deleting blogs', () => {
     assert(!ids.includes(blogToDelete.id))
 
     assert.strictEqual(blogsAtStart.length, helper.initialBlogs.length)
+  })
+})
+
+describe('putting blogs', () => {
+  test('updating likes', async () => {
+    const blogToUpdate = await helper.firstBlogInDb()
+    const newLikeValue = 150
+
+    await api.put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ likes: newLikeValue })
+      .expect(204)
+
+    const updatedBlogActual = await helper.firstBlogInDb()
+
+    const updatedBlogExpected = blogToUpdate
+    updatedBlogExpected.likes = newLikeValue
+
+    assert.deepStrictEqual(updatedBlogActual, updatedBlogExpected)
+  })
+
+  test('putting a blog that does not exist', async () => {
+    const newBlog = {
+      title: 'New test note',
+      author: 'Server',
+      url: 'https://idontexist.com/',
+      likes: 0
+    }
+
+    const blogsAtStart = await helper.blogsInDb()
+
+    const nonExistingId = await helper.nonExistingId()
+    const putResponse = await api.put(`/api/blogs/${nonExistingId}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const addedBlog = putResponse.body
+    delete addedBlog.id
+
+    assert.deepStrictEqual(addedBlog, newBlog)
+    assert.strictEqual(blogsAtStart.length + 1, blogsAtEnd.length)
   })
 })
 
