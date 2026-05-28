@@ -17,9 +17,7 @@ mongoose.connect(config.MONGODB_URI, { family: 4 })
   })
 
 app.use(express.json())
-if (process.env.NODE_ENV !== 'test') {
-  app.use(middleware.requestLogger)
-}
+app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsRouter)
 
