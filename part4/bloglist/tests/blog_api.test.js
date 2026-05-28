@@ -70,6 +70,28 @@ describe('POST /api/blogs', () => {
 
     assert.deepStrictEqual(addedBlog.likes, 0)
   })
+
+  test('adding a newBlog without the title property will result in a response of 400 status code', async () => {
+    const newBlog = {
+      author: "System",
+      url: "https://idontexist.com/",
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('adding a newBlog without the url property will result in a response of 400 status code', async () => {
+    const newBlog = {
+      title: "New test note",
+      author: "System",
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 })
 
 after(async () => {
