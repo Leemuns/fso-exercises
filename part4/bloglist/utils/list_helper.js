@@ -42,7 +42,7 @@ const mostLikes = blogList => {
 
   return _(blogList)
     .groupBy('author')
-    .map((likes, author) => { return {author, likes: _(likes).sumBy('likes')} })
+    .map((likes, author) => { return { author, likes: _(likes).sumBy('likes') } })
     .maxBy('likes')
 }
 
