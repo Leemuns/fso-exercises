@@ -31,6 +31,29 @@ describe('GET /api/blogs', () => {
   })
 })
 
+describe('POST /api/blogs', () => {
+  test('making an HTTP POST request to the /api/blogs increases total number of blogs by one and correct saves its content', async () => {
+    const newBlog = {
+      title: "New test note",
+      author: "System",
+      url: "https://idontexist.com/",
+      likes: 150
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const addedBlog = response.body.find(r => r.title === newBlog.title)
+    delete addedBlog.id
+
+    assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
+    assert.deepStrictEqual(addedBlog, newBlog)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
