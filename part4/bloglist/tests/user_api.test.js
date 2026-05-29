@@ -10,7 +10,7 @@ const User = require('../models/user')
 
 const api = supertest(app)
 
-describe('when there is initially one user in db', () => {
+describe('when there is initially two user in db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -57,6 +57,97 @@ describe('when there is initially one user in db', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     assert(usernames.includes(newUser.username))
+  })
+
+  test('adding a user without username results in error response 400', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      name: 'Matti Luukkainen',
+      password: 'ab',
+    }
+
+    await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    assert(!usernames.includes(newUser.username))
+  })
+
+  test('adding a username shorter than 3 characters results in error response 400', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      // username: 'ab',
+      name: 'Matti Luukkainen',
+      password: 'salainen',
+    }
+
+    await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    assert(!usernames.includes(newUser.username))
+  })
+
+  test('adding a user without password results in error response 400', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+    }
+
+    await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    assert(!usernames.includes(newUser.username))
+  })
+
+  test('adding a password shorter than 3 characters results in error response 400', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'ab',
+    }
+
+    await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    assert(!usernames.includes(newUser.username))
+  })
+
+  test('adding a user with an existing username results in error response 400', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = helper.initialUsers[0]
+
+    await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 })
 
