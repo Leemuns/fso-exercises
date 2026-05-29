@@ -34,7 +34,20 @@ blogsRouter.post('', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  const userId = decodedToken.id
+
+  const blog = await Blog.findById(request.params.id)
+
+  if (blog.user.toString() !== userId.toString()) {
+    console.log('TEST')
+    return response.status(403).json({ error: 'Not allowed to delete notes created by other users' })
+  }
+
+  await blog.deleteOne()
   response.status(204).end()
 })
 
