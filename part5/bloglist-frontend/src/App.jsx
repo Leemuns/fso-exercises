@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import LoginForm from './components/LoginForm'
-import BlogsDisplay from './components/BlogsDisplay'
+import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -20,11 +20,20 @@ const App = () => {
     fetchBlogs()
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async event => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
@@ -33,12 +42,27 @@ const App = () => {
     }
   }
 
-  return (
-    <div>
-      {!user && <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />}
-      {user && <BlogsDisplay user={user} blogs={blogs} />}
-    </div>
-  )
+  const handleLogout = () => {
+    setUser(null)
+    window.localStorage.removeItem('loggedUser')
+  }
+
+  if (!user) {
+    return (
+      <div>
+        {!user && <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />}
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <h2>blogs</h2>
+        <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
+        <Blogs blogs={blogs} />
+      </div>
+    )
+  }
+
 }
 
 export default App
