@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import LoginForm from './components/LoginForm'
+import FieldInput from './components/FieldInput'
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,6 +11,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -25,6 +29,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -34,6 +39,7 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -47,6 +53,17 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
   }
 
+  const handleCreateBLog = async () => {
+    event.preventDefault()
+
+    const newBlog = await blogService.create({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+
+    setBlogs(blogs.concat(newBlog))
+  }
+
   if (!user) {
     return (
       <div>
@@ -58,6 +75,16 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
+
+        <form onSubmit={handleCreateBLog}>
+          <h2>create new</h2>
+          <FieldInput name='title' value={title} setValue={setTitle} />
+          <FieldInput name='author' value={author} setValue={setAuthor} />
+          <FieldInput name='url' value={url} setValue={setUrl} />
+
+          <button type="submit">create</button>
+        </form>
+
         <Blogs blogs={blogs} />
       </div>
     )

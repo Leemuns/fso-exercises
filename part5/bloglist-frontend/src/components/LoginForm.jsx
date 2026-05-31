@@ -1,16 +1,11 @@
+import FieldInput from './FieldInput'
+
 const LoginForm = ({ username, setUsername, password, setPassword, handleLogin }) => {
   return (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
-      <label style={{ display: 'block' }}>
-        username
-        <input value={username} onChange={event => setUsername(event.target.value)} />
-      </label>
-
-      <label style={{ display: 'block' }}>
-        password
-        <input value={password} type="password" onChange={event => setPassword(event.target.value)} />
-      </label>
+      <FieldInput name='username' value={username} setValue={setUsername} />
+      <FieldInput name='password' value={password} setValue={setPassword} />
 
       <button type="submit">login</button>
     </form>
