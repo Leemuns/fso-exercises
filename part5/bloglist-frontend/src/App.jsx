@@ -65,20 +65,36 @@ const App = () => {
       setBlogs(blogs.concat(newBlog))
       displayNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
     } catch (error) {
-      displayNotification(`failed to add blog ${title} by ${author}\nError: ${error}`, true)
+      displayNotification(`failed to add blog "${title}" by ${author}. Error: ${error}`, true)
     }
     setTitle('')
     setAuthor('')
     setUrl('')
   }
 
-  const handleLike = async (blogToUpdate) => {
+  const handleLikeBlog = async (blogToUpdate) => {
     // increment like of blogToUpdate by one
-    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
-    const { id, ...blogWithoutId } = updatedBlog
+    try {
+      const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
+      const { id, ...blogWithoutId } = updatedBlog
 
-    await blogService.update(id, blogWithoutId)
-    setBlogs(blogs.map(blog => blog.id === id ? updatedBlog : blog))
+      await blogService.update(id, blogWithoutId)
+      setBlogs(blogs.map(blog => blog.id === id ? updatedBlog : blog))
+    } catch (error) {
+      displayNotification(`Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`, true)
+    }
+  }
+
+  const handleRemoveBlog = async (blogToRemove) => {
+    try {
+      if (window.confirm(`Remove blog "${blogToRemove.title} by ${blogToRemove.author}"`)) {
+        await blogService.remove(blogToRemove.id)
+        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+        displayNotification(`Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`)
+      }
+    } catch (error) {
+      displayNotification(`Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`, true)
+    }
   }
 
   const displayNotification = (message, isError = false) => {
@@ -110,7 +126,7 @@ const App = () => {
           />
         </Togglable>
 
-        <Blogs blogs={blogs} handleLike={handleLike} />
+        <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user.id}/>
       </div>
     )
   }
