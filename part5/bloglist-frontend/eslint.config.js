@@ -38,7 +38,9 @@ export default [
       'no-trailing-spaces': 'error',
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
-      'no-console': 'off'
+      'no-console': 'off',
+      'prefer-const': ['error'],
+      'no-param-reassign': ['error']
     }
   }
 ]

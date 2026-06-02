@@ -1,8 +1,4 @@
-const FieldInput = ({ name, value, setValue, type }) => {
-  if (!type) {
-    type = 'text'
-  }
-
+const FieldInput = ({ name, value, setValue, type='text' }) => {
   return (
     <label style={{ display: 'block' }}>
       {name}
