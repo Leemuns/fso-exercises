@@ -1,10 +1,17 @@
-const Notification = ({ notification }) => {
-  const { message, isError } = notification
+import { useState, useImperativeHandle } from 'react'
 
-  if (!message) {
+const Notification = props => {
+  const [notification, setNotification] = useState(null)
+
+  useImperativeHandle(props.ref, () => {
+    return { setNotification }
+  })
+
+  if (!notification) {
     return null
   }
 
+  const { message, isError } = notification
   const style = {
     color: isError ? 'red' : 'green',
     background: 'lightgrey',

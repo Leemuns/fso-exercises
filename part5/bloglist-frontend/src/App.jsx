@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -10,13 +10,9 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
+  const notificationRef = useRef()
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -37,16 +33,12 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async event => {
-    event.preventDefault()
-
+  const loginUser = async userCredentials => {
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(userCredentials)
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch {
       displayNotification('Invalid username or password', true)
     }
@@ -57,19 +49,20 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
   }
 
-  const handleCreateBLog = async () => {
-    event.preventDefault()
-
+  const createBlog = async (newBlogObject) => {
     try {
-      const newBlog = await blogService.create({ title, author, url })
+      const newBlog = await blogService.create(newBlogObject)
+      newBlog.user = {
+        username: user.username,
+        name: user.name,
+        id: user.id
+      }
       setBlogs(blogs.concat(newBlog))
       displayNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
     } catch (error) {
+      const { title, author } = newBlogObject
       displayNotification(`failed to add blog "${title}" by ${author}. Error: ${error}`, true)
     }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   const handleLikeBlog = async (blogToUpdate) => {
@@ -98,14 +91,16 @@ const App = () => {
   }
 
   const displayNotification = (message, isError = false) => {
-    setNotification({ message, isError })
-    setTimeout(() => setNotification({ message: null }), 3000)
+    notificationRef.current.setNotification({ message, isError })
+    setTimeout(() => notificationRef.current.setNotification(null), 3000)
   }
 
   if (!user) {
     return (
       <div>
-        <LoginForm notification={notification} username={username} setUsername={setUsername} password={password} setPassword={setPassword} handleLogin={handleLogin} />
+        <h2>log in to application</h2>
+        <Notification ref={notificationRef}/>
+        <LoginForm loginUser={loginUser} />
       </div>
     )
   } else {
@@ -113,17 +108,12 @@ const App = () => {
       <div>
         <h2>blogs</h2>
 
-        <Notification notification={notification}/>
+        <Notification ref={notificationRef} />
 
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
 
         <Togglable buttonLabel='create new blog'>
-          <CreateBlogForm
-            handleCreateBlog={handleCreateBLog}
-            title={title} setTitle={setTitle}
-            author={author} setAuthor={setAuthor}
-            url={url} setUrl={setUrl}
-          />
+          <CreateBlogForm createBlog={createBlog} />
         </Togglable>
 
         <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user.id}/>

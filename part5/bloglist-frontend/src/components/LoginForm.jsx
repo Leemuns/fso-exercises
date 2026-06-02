@@ -1,11 +1,21 @@
+import { useState } from 'react'
+
 import Notification from './Notification'
 import FieldInput from './FieldInput'
 
-const LoginForm = ({ notification, username, setUsername, password, setPassword, handleLogin }) => {
+const LoginForm = ({ loginUser }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = event => {
+    event.preventDefault()
+    loginUser({ username, password })
+    setUsername('')
+    setPassword('')
+  }
+
   return (
     <form onSubmit={handleLogin}>
-      <h2>log in to application</h2>
-      <Notification notification={notification}/>
       <FieldInput name='username' value={username} setValue={setUsername} />
       <FieldInput name='password' value={password} setValue={setPassword} type='password'/>
 

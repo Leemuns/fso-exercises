@@ -1,8 +1,23 @@
+import { useState } from 'react'
+
 import FieldInput from './FieldInput'
 
-const CreateBlogForm = ({ handleCreateBlog, title, setTitle, author, setAuthor, url, setUrl }) => {
+const CreateBlogForm = ({ createBlog }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const addBlog = event => {
+    event.preventDefault()
+
+    createBlog({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   return (
-    <form onSubmit={handleCreateBlog}>
+    <form onSubmit={addBlog}>
       <h2>create new</h2>
       <FieldInput name='title' value={title} setValue={setTitle} />
       <FieldInput name='author' value={author} setValue={setAuthor} />

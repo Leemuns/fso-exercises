@@ -24,7 +24,7 @@ const Blog = ({ blog, handleLikeBlog, handleRemoveBlog, userId }) => {
       <div style={showWhenVisible}>
         <div>{blog.url}</div>
         <div>likes {blog.likes}<button onClick={() => handleLikeBlog(blog)}>like</button></div>
-        <div>{blog.author}</div>
+        <div>{blog.user.name}</div>
         {blog.user.id === userId &&
           <button onClick={() => handleRemoveBlog(blog)}>remove</button>
         }

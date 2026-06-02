@@ -3,6 +3,7 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import stylistic from '@stylistic/eslint-plugin'
+import vitest from '@vitest/eslint-plugin'
 
 export default [
   { ignores: ['dist'] },
@@ -41,6 +42,20 @@ export default [
       'no-console': 'off',
       'prefer-const': ['error'],
       'no-param-reassign': ['error']
+    }
+  },
+  {
+    files: ['**/*.test.{js,jsx}'],
+    plugins: {
+      vitest,
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
     }
   }
 ]
