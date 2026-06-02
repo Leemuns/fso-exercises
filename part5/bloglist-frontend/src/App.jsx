@@ -71,6 +71,15 @@ const App = () => {
     setUrl('')
   }
 
+  const handleLike = async (blogToUpdate) => {
+    // increment like of blogToUpdate by one
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
+    const { id, ...blogWithoutId } = updatedBlog
+
+    await blogService.update(id, blogWithoutId)
+    setBlogs(blogs.map(blog => blog.id === id ? updatedBlog : blog))
+  }
+
   const displayNotification = (message, isError = false) => {
     setNotification({ message, isError })
     setTimeout(() => setNotification({ message: null }), 3000)
@@ -100,7 +109,7 @@ const App = () => {
           />
         </Togglable>
 
-        <Blogs blogs={blogs} />
+        <Blogs blogs={blogs} handleLike={handleLike} />
       </div>
     )
   }
