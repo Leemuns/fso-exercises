@@ -7,7 +7,7 @@ const LoginForm = ({ notification, username, setUsername, password, setPassword,
       <h2>log in to application</h2>
       <Notification notification={notification}/>
       <FieldInput name='username' value={username} setValue={setUsername} />
-      <FieldInput name='password' value={password} setValue={setPassword} />
+      <FieldInput name='password' value={password} setValue={setPassword} type='password'/>
 
       <button type="submit">login</button>
     </form>

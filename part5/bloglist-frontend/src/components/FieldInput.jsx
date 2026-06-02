@@ -1,8 +1,12 @@
-const FieldInput = ({ name, value, setValue }) => {
+const FieldInput = ({ name, value, setValue, type }) => {
+  if (!type) {
+    type = 'text'
+  }
+
   return (
     <label style={{ display: 'block' }}>
       {name}
-      <input value={value} onChange={event => setValue(event.target.value)} />
+      <input type={type} value={value} onChange={event => setValue(event.target.value)} />
     </label>
   )
 }

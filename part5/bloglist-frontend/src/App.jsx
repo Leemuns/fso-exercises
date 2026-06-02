@@ -16,6 +16,9 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [loginVisible, setLoginVisible] = useState(false)
+  const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+  const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -90,12 +93,18 @@ const App = () => {
 
         <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
 
-        <CreateBlogForm
-          handleCreateBlog={handleCreateBLog}
-          title={title} setTitle={setTitle}
-          author={author} setAuthor={setAuthor}
-          url={url} setUrl={setUrl}
-        />
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>create new blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <CreateBlogForm
+            handleCreateBlog={handleCreateBLog}
+            title={title} setTitle={setTitle}
+            author={author} setAuthor={setAuthor}
+            url={url} setUrl={setUrl}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
 
         <Blogs blogs={blogs} />
       </div>
