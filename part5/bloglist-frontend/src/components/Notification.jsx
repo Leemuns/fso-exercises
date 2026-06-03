@@ -22,7 +22,11 @@ const Notification = props => {
     marginBottom: '10px',
   }
 
-  return <div style={style}>{message}</div>
+  return (
+    <div className="error" style={style}>
+      {message}
+    </div>
+  )
 }
 
 export default Notification
