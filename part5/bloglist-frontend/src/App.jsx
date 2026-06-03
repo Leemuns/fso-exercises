@@ -72,7 +72,10 @@ const App = () => {
       const { id, ...blogWithoutId } = updatedBlog
 
       await blogService.update(id, blogWithoutId)
-      setBlogs(blogs.map(blog => blog.id === id ? updatedBlog : blog))
+      setBlogs(
+        blogs.map(blog => blog.id === id ? updatedBlog : blog)
+          .sort((a, b) => b.likes - a.likes)
+      )
     } catch (error) {
       displayNotification(`Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`, true)
     }

@@ -1,10 +1,11 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog, initialUsers } = require('./helper')
+const { initialBlogs, initialUsers, loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
-    
     await request.post('http://localhost:3003/api/testing/reset')
+
+    // using forEach is prob not a good idea since the order is random but I'm used to this and order doesn matter so I think its fine.
     initialUsers.forEach(async user => await request.post('http://localhost:3003/api/users', { data: user }))
 
     await page.goto('http://localhost:5173')
@@ -51,7 +52,31 @@ describe('Blog app', () => {
       await expect(page.getByText('test blog by playwright test system')).toBeVisible()
     })
 
-    describe('One blog is added', () => {
+    test.only('blogs are ordered by likes in descending order', async ({ page, request }) => {
+      await expect(page.getByText('logged in')).toBeVisible()
+
+      const loggedUserJSON = await page.evaluate(() => localStorage.getItem('loggedUser'));
+      const token = JSON.parse(loggedUserJSON).token
+      console.log(token)
+      
+      for (const blog of initialBlogs) {
+        await request.post('http://localhost:3003/api/blogs', { headers: { 'Authorization': `Bearer ${token}` }, data: blog })
+      }
+      await page.goto('http://localhost:5173')
+
+      for (let i = 0; i < initialBlogs.length; i++ ) {
+        await page.getByRole('button', { name: 'show' }).first().click()
+      }
+
+      expect(await page.locator('.blog').nth(0).getByText('likes').innerText()).toBe('likes 12')
+      expect(await page.locator('.blog').nth(1).getByText('likes').innerText()).toBe('likes 10')
+      expect(await page.locator('.blog').nth(2).getByText('likes').innerText()).toBe('likes 7')
+      expect(await page.locator('.blog').nth(3).getByText('likes').innerText()).toBe('likes 5')
+      expect(await page.locator('.blog').nth(4).getByText('likes').innerText()).toBe('likes 2')
+      expect(await page.locator('.blog').nth(5).getByText('likes').innerText()).toBe('likes 0')
+    })
+
+    describe('One blog is added by user root', () => {
       beforeEach(async ({ page }) => {
         const blog = {
           title: 'test blog by playwright',
@@ -79,7 +104,7 @@ describe('Blog app', () => {
         await expect(page.getByText('test blog by playwright test system')).not.toBeVisible()
       })
 
-      test.only('blog delete button can only be seen by the user who added it', async ({ page }) => {
+      test('blog delete button can only be seen by the user who added it', async ({ page }) => {
         await page.getByRole('button', { name: 'show' }).click()
         await expect(page.getByRole('button', { name: 'remove' })).toBeVisible()
 

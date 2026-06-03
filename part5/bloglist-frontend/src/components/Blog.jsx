@@ -17,13 +17,16 @@ const Blog = ({ blog, handleLikeBlog, handleRemoveBlog, userId }) => {
   }
 
   return (
-    <div style={style}>
+    <div className='blog' style={style}>
       {blog.title} {blog.author}
       <button style={hideWhenVisible} onClick={togglevisibility}>show</button>
       <button style={showWhenVisible} onClick={togglevisibility}>hide</button>
       <div style={showWhenVisible}>
         <div>{blog.url}</div>
-        <div>likes {blog.likes}<button onClick={() => handleLikeBlog(blog)}>like</button></div>
+        <div>
+          <span>likes {blog.likes}</span>
+          <button onClick={() => handleLikeBlog(blog)}>like</button>
+        </div>
         <div>{blog.user.name}</div>
         {blog.user.id === userId &&
           <button onClick={() => handleRemoveBlog(blog)}>remove</button>
