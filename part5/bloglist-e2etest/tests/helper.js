@@ -1,3 +1,16 @@
+const initialUsers =  [
+  {
+    name: 'Root User',
+    username: 'root',
+    password: 'root123'
+  },
+  {
+    name: 'Second User',
+    username: 'second',
+    password: 'second123'
+  }
+]
+
 const loginWith = async (page, username, password)  => {
   await page.getByLabel('username').fill(username)
   await page.getByLabel('password').fill(password)
@@ -12,4 +25,4 @@ const createBlog = async (page, blog) => {
   await page.getByRole('button', { name: 'create' }).click()
 }
 
-export { loginWith, createBlog }
+export { loginWith, createBlog, initialUsers }
