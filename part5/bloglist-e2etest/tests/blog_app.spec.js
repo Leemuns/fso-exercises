@@ -67,7 +67,7 @@ describe('Blog app', () => {
         await createBlog(page, blog)
       })
 
-      test.only('blog can be liked to increase its amount of likes', async ({ page }) => {
+      test('blog can be liked to increase its amount of likes', async ({ page }) => {
         await page.getByRole('button', { name: 'show' }).click()
         await expect(page.getByText('likes 0')).toBeVisible()
         const likeButton = page.getByRole('button', { name: 'like' })
@@ -75,6 +75,13 @@ describe('Blog app', () => {
         await expect(page.getByText('likes 1')).toBeVisible()
         await likeButton.click()
         await expect(page.getByText('likes 2')).toBeVisible()
+      })
+
+      test.only('blog can be deleted by the user who added it', async ({ page }) => {
+        await page.getByRole('button', { name: 'show' }).click()
+        page.on('dialog', dialog => dialog.accept());
+        await page.getByRole('button', { name: 'remove' }).click()
+        await expect(page.getByText('test blog by playwright test system')).not.toBeVisible()
       })
     })
   })
