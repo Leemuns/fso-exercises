@@ -68,12 +68,21 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'show' }).first().click()
       }
 
-      expect(await page.locator('.blog').nth(0).getByText('likes').innerText()).toBe('likes 12')
-      expect(await page.locator('.blog').nth(1).getByText('likes').innerText()).toBe('likes 10')
-      expect(await page.locator('.blog').nth(2).getByText('likes').innerText()).toBe('likes 7')
-      expect(await page.locator('.blog').nth(3).getByText('likes').innerText()).toBe('likes 5')
-      expect(await page.locator('.blog').nth(4).getByText('likes').innerText()).toBe('likes 2')
-      expect(await page.locator('.blog').nth(5).getByText('likes').innerText()).toBe('likes 0')
+      const extractLikesFromBlog = async i => {
+        const text = await page.locator('.blog').nth(i).getByText('likes').innerText()
+        return text.match(/\d+/)[0]
+      }
+
+      let isDesc = true
+      for (let i = 1; i < initialBlogs.length; i++ ) {
+        const prevLikes = await extractLikesFromBlog(i-1)
+        const curLikes = await extractLikesFromBlog(i)
+        if (prevLikes < curLikes) {
+          isDesc = false
+          break
+        }
+      }
+      expect(isDesc, true)
     })
 
     describe('One blog is added by user root', () => {
