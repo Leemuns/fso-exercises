@@ -54,13 +54,14 @@ describe('Blog app', () => {
 
     test.only('blogs are ordered by likes in descending order', async ({ page, request }) => {
       await expect(page.getByText('logged in')).toBeVisible()
-
       const loggedUserJSON = await page.evaluate(() => localStorage.getItem('loggedUser'));
       const token = JSON.parse(loggedUserJSON).token
-      console.log(token)
       
       for (const blog of initialBlogs) {
-        await request.post('http://localhost:3003/api/blogs', { headers: { 'Authorization': `Bearer ${token}` }, data: blog })
+        await request.post('http://localhost:3003/api/blogs', { 
+          headers: { 'Authorization': `Bearer ${token}` }, 
+          data: blog 
+        })
       }
       await page.goto('http://localhost:5173')
 
@@ -68,21 +69,14 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'show' }).first().click()
       }
 
-      const extractLikesFromBlog = async i => {
-        const text = await page.locator('.blog').nth(i).getByText('likes').innerText()
-        return text.match(/\d+/)[0]
+      const likesList = []
+      for (let i = 1; i < initialBlogs.length; i++ ) {
+        const likesText = page.locator('.blog').nth(i).getByText('likes').innerText()
+        const likesNum = (await likesText).match(/\d+/)[0]
+        likesList.push(likesNum)
       }
 
-      let isDesc = true
-      for (let i = 1; i < initialBlogs.length; i++ ) {
-        const prevLikes = await extractLikesFromBlog(i-1)
-        const curLikes = await extractLikesFromBlog(i)
-        if (prevLikes < curLikes) {
-          isDesc = false
-          break
-        }
-      }
-      expect(isDesc, true)
+      expect(likesList.every((cur, i, arr) => i === 0 || arr[i-1] >= cur), true)
     })
 
     describe('One blog is added by user root', () => {
