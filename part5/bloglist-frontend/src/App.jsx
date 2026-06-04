@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Routes, Route, Link, useMatch } from 'react-router-dom'
+import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -15,6 +15,12 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const notificationRef = useRef()
+  const navigate = useNavigate()
+  const match = useMatch('/blogs/:id')
+  const blog = match
+    ? blogs.find(blog => blog.id === match.params.id)
+    : null
+  const userId = user?.id ?? null
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -49,6 +55,7 @@ const App = () => {
   const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('loggedUser')
+    navigate('/')
   }
 
   const createBlog = async (newBlogObject) => {
@@ -67,7 +74,7 @@ const App = () => {
     }
   }
 
-  const handleLikeBlog = async (blogToUpdate) => {
+  const likeBlog = async (blogToUpdate) => {
     // increment like of blogToUpdate by one
     try {
       const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
@@ -83,7 +90,7 @@ const App = () => {
     }
   }
 
-  const handleRemoveBlog = async (blogToRemove) => {
+  const removeBlog = async (blogToRemove) => {
     try {
       if (window.confirm(`Remove blog "${blogToRemove.title} by ${blogToRemove.author}"`)) {
         await blogService.remove(blogToRemove.id)
@@ -104,29 +111,28 @@ const App = () => {
     padding: 5
   }
 
-  const match = useMatch('/blogs/:id')
-  const blog = match
-    ? blogs.find(blog => blog.id === match.params.id)
-    : null
-
   return (
     <div>
-      <Notification ref={notificationRef} />
-
       <div>
         <Link style={padding} to='/'>blogs</Link>
+        {user && <Link style={padding} to='/create'>new blog</Link>}
         {!user ? <Link style={padding} to="/login">login</Link> : <button onClick={handleLogout}>Logout</button>}
       </div>
 
+      <Notification ref={notificationRef} />
+
       <Routes>
         <Route path="/blogs/:id" element={
-          <Blog blog={blog} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user?.id ?? null} />
+          <Blog blog={blog} likeBlog={likeBlog} removeBlog={removeBlog} userId={userId} />
         } />
         <Route path='/login' element={
           <LoginForm loginUser={loginUser} />
         } />
+        <Route path='/create' element={
+          <CreateBlogForm createBlog={createBlog} userId={userId}/>
+        } />
         <Route path='/' element={
-          <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user?.id ?? null}/>
+          <Blogs blogs={blogs} />
         } />
       </Routes>
     </div>

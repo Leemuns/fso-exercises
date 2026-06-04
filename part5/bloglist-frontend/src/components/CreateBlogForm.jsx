@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import FieldInput from './FieldInput'
 
-const CreateBlogForm = ({ createBlog }) => {
+const CreateBlogForm = ({ createBlog, userId }) => {
+  const navigate = useNavigate()
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -14,6 +17,16 @@ const CreateBlogForm = ({ createBlog }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
+
+    navigate('/')
+  }
+
+  if (!userId) {
+    return (
+      <div>
+        <p>User not logged in</p>
+      </div>
+    )
   }
 
   return (

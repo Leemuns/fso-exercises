@@ -5,15 +5,18 @@ import Notification from './Notification'
 import FieldInput from './FieldInput'
 
 const LoginForm = ({ loginUser }) => {
+  const navigate = useNavigate()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
 
   const handleLogin = event => {
     event.preventDefault()
+
     loginUser({ username, password })
     setUsername('')
     setPassword('')
+
     navigate('/')
   }
 
