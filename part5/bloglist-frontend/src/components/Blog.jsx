@@ -1,31 +1,15 @@
-import { useState } from 'react'
-
 import Togglable from './Togglable'
 
 const Blog = ({ blog, handleLikeBlog, handleRemoveBlog, userId }) => {
-  const [visible, setVisible] = useState(false)
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const togglevisibility =() => {
-    setVisible(!visible)
-  }
-
-  const style = {
-    border: '1px solid black',
-    margin: '2px 0px 2px 0px'
-  }
-
+  const showIfLoggedIn = { display: userId ? '' : 'none' }
   return (
-    <div className='blog' style={style}>
-      {blog.title} {blog.author}
-      <button style={hideWhenVisible} onClick={togglevisibility}>show</button>
-      <button style={showWhenVisible} onClick={togglevisibility}>hide</button>
-      <div style={showWhenVisible}>
+    <div className='blog'>
+      <h2>{blog.title} {blog.author}</h2>
+      <div>
         <div>{blog.url}</div>
         <div>
           <span>likes {blog.likes}</span>
-          <button onClick={() => handleLikeBlog(blog)}>like</button>
+          <button onClick={() => handleLikeBlog(blog)} style={showIfLoggedIn}>like</button>
         </div>
         <div>{blog.user.name}</div>
         {blog.user.id === userId &&

@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link
-} from 'react-router-dom'
+import { Routes, Route, Link, useMatch } from 'react-router-dom'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Blogs from './components/Blogs'
+import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -106,8 +104,13 @@ const App = () => {
     padding: 5
   }
 
+  const match = useMatch('/blogs/:id')
+  const blog = match
+    ? blogs.find(blog => blog.id === match.params.id)
+    : null
+
   return (
-    <Router>
+    <div>
       <Notification ref={notificationRef} />
 
       <div>
@@ -116,14 +119,17 @@ const App = () => {
       </div>
 
       <Routes>
+        <Route path="/blogs/:id" element={
+          <Blog blog={blog} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user?.id ?? null} />
+        } />
+        <Route path='/login' element={
+          <LoginForm loginUser={loginUser} />
+        } />
         <Route path='/' element={
           <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user?.id ?? null}/>
         } />
-        <Route path='login' element={
-          <LoginForm loginUser={loginUser} />
-        } />
       </Routes>
-    </Router>
+    </div>
   )
 
   // if (!user) {
