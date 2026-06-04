@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -98,32 +102,55 @@ const App = () => {
     setTimeout(() => notificationRef.current.setNotification(null), 3000)
   }
 
-  if (!user) {
-    return (
-      <div>
-        <h2>log in to application</h2>
-        <Notification ref={notificationRef}/>
-        <LoginForm loginUser={loginUser} />
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        <h2>blogs</h2>
-
-        <Notification ref={notificationRef} />
-
-        <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
-
-        <Togglable buttonLabel='create new blog'>
-          <CreateBlogForm createBlog={createBlog} />
-        </Togglable>
-
-        <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user.id}/>
-      </div>
-    )
+  const padding = {
+    padding: 5
   }
 
+  return (
+    <Router>
+      <Notification ref={notificationRef} />
+
+      <div>
+        <Link style={padding} to='/'>blogs</Link>
+        {!user ? <Link style={padding} to="/login">login</Link> : <button onClick={handleLogout}>Logout</button>}
+      </div>
+
+      <Routes>
+        <Route path='/' element={
+          <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user?.id ?? null}/>
+        } />
+        <Route path='login' element={
+          <LoginForm loginUser={loginUser} />
+        } />
+      </Routes>
+    </Router>
+  )
+
+  // if (!user) {
+  //   return (
+  //     <div>
+  //       <h2>log in to application</h2>
+  //       <Notification ref={notificationRef}/>
+  //       <LoginForm loginUser={loginUser} />
+  //     </div>
+  //   )
+  // } else {
+  //   return (
+  //     <div>
+  //       <h2>blogs</h2>
+
+  //       <Notification ref={notificationRef} />
+
+  //       <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
+
+  //       <Togglable buttonLabel='create new blog'>
+  //         <CreateBlogForm createBlog={createBlog} />
+  //       </Togglable>
+
+  //       <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user.id}/>
+  //     </div>
+  //   )
+  // }
 }
 
 export default App
