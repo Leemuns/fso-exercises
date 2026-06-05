@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
+import { Container } from '@mui/material'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -112,7 +113,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <div>
         <Link style={padding} to='/'>blogs</Link>
         {user && <Link style={padding} to='/create'>new blog</Link>}
@@ -135,7 +136,7 @@ const App = () => {
           <Blogs blogs={blogs} />
         } />
       </Routes>
-    </div>
+    </Container>
   )
 
   // if (!user) {

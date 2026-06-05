@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@mui/material'
 
 import FieldInput from './FieldInput'
 
@@ -31,12 +32,14 @@ const CreateBlogForm = ({ createBlog, userId }) => {
 
   return (
     <form onSubmit={addBlog}>
-      <h2>create new</h2>
-      <FieldInput name='title' value={title} setValue={setTitle} />
-      <FieldInput name='author' value={author} setValue={setAuthor} />
-      <FieldInput name='url' value={url} setValue={setUrl} />
+      <h2>Create new</h2>
+      <FieldInput label='title' value={title} setValue={setTitle} />
+      <FieldInput label='author' value={author} setValue={setAuthor} />
+      <FieldInput label='url' value={url} setValue={setUrl} />
 
-      <button type="submit">create</button>
+      <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
+        create
+      </Button>
     </form>
   )
 }

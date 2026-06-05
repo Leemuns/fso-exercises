@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@mui/material'
 
-import Notification from './Notification'
-import FieldInput from './FieldInput'
+import LoginFieldInput from './LoginFieldInput'
 
 const LoginForm = ({ loginUser }) => {
   const navigate = useNavigate()
@@ -22,12 +22,23 @@ const LoginForm = ({ loginUser }) => {
 
   return (
     <form onSubmit={handleLogin}>
-      <h2>log in to application</h2>
+      <h2 style={{ marginBottom: '6px' }}>Log in to application</h2>
 
-      <FieldInput name='username' value={username} setValue={setUsername} />
-      <FieldInput name='password' value={password} setValue={setPassword} type='password'/>
+      <LoginFieldInput
+        label='username'
+        value={username}
+        setValue={setUsername}
+      />
+      <LoginFieldInput
+        label='password'
+        value={password}
+        setValue={setPassword}
+        type='password'
+      />
 
-      <button type="submit">login</button>
+      <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
+        LOGIN
+      </Button>
     </form>
   )
 }
