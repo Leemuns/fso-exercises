@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter as Router } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
+
 import CreateBlogForm from './CreateBlogForm'
 
 describe('CreateBlogForm component', () => {
@@ -12,7 +14,11 @@ describe('CreateBlogForm component', () => {
       url: 'test url'
     }
 
-    render(<CreateBlogForm createBlog={mockCreateBlog} />)
+    render(
+      <Router>
+        <CreateBlogForm createBlog={mockCreateBlog} />
+      </Router>
+    )
 
     const createButton = screen.getByText('create')
     const titleInput = screen.getByLabelText('title')

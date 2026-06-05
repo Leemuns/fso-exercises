@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter as Router } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
+
 import Blog from './Blog'
 
 describe('Blog component', () => {
@@ -15,41 +17,77 @@ describe('Blog component', () => {
     }
   }
 
-  test('blog\'s title and authored are rendered, while url and likes are hidden by default', () => {
-    render(<Blog blog={blog} />)
+  test('without login, blog\'s title, author, url, likes, and user are rendered while buttons are not shown', () => {
+    render(<Router><Blog blog={blog} /></Router>)
 
     const blogElement = screen.getByText('Type wars Robert C. Martin')
     expect(blogElement).toBeDefined()
 
     const urlElement = screen.getByText('http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html')
     const likesElement = screen.getByText('likes 2')
-    expect(urlElement).not.toBeVisible()
-    expect(likesElement).not.toBeVisible()
+    const userNameElement = screen.getByText('Root User')
+    expect(urlElement).toBeVisible()
+    expect(likesElement).toBeVisible()
+    expect(userNameElement).toBeVisible()
+
+    const likeButton = screen.getByText('like')
+    const removeButton = screen.getByText('remove')
+    expect(likeButton).not.toBeVisible()
+    expect(removeButton).not.toBeVisible()
   })
 
-  test('blog\'s url and likes are rendered after clicking show button', async () => {
-    const user = userEvent.setup()
+  test('authenticated users who are not the creator are also shown the like button', () => {
+    render(<Router>
+      <Blog blog={blog} userId='6a1961fed3c5812e7ef8fake' />
+    </Router>)
 
-    render(<Blog blog={blog} />)
-
-    const showButton = screen.getByText('show')
-    await user.click(showButton)
+    const blogElement = screen.getByText('Type wars Robert C. Martin')
+    expect(blogElement).toBeDefined()
 
     const urlElement = screen.getByText('http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html')
     const likesElement = screen.getByText('likes 2')
+    const userNameElement = screen.getByText('Root User')
+    const likeButton = screen.getByText('like')
     expect(urlElement).toBeVisible()
     expect(likesElement).toBeVisible()
+    expect(userNameElement).toBeVisible()
+    expect(likeButton).toBeVisible()
+
+    const removeButton = screen.getByText('remove')
+    expect(removeButton).not.toBeVisible()
+  })
+
+  test('blog’s creator is shown the delete button', () => {
+    render(<Router>
+      <Blog blog={blog} userId={blog.user.id} />
+    </Router>)
+
+    const blogElement = screen.getByText('Type wars Robert C. Martin')
+    expect(blogElement).toBeDefined()
+
+    const urlElement = screen.getByText('http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html')
+    const likesElement = screen.getByText('likes 2')
+    const userNameElement = screen.getByText('Root User')
+    const likeButton = screen.getByText('like')
+    const removeButton = screen.getByText('remove')
+    expect(urlElement).toBeVisible()
+    expect(likesElement).toBeVisible()
+    expect(userNameElement).toBeVisible()
+    expect(likeButton).toBeVisible()
+    expect(removeButton).toBeVisible()
   })
 
   test('call likeHandler function twice when clicking the like button two times', async () => {
-    const mockLikeHandler = vi.fn()
+    const mockLikeBlog = vi.fn()
     const user = userEvent.setup()
 
-    render(<Blog blog={blog} handleLikeBlog={mockLikeHandler}/>)
+    render(<Router>
+      <Blog blog={blog} userId={blog.user.id} likeBlog={mockLikeBlog} />
+    </Router>)
 
     const likeButton = screen.getByText('like')
     await user.click(likeButton)
     await user.click(likeButton)
-    expect(mockLikeHandler.mock.calls).toHaveLength(2)
+    expect(mockLikeBlog.mock.calls).toHaveLength(2)
   })
 })
