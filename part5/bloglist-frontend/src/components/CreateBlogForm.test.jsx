@@ -16,7 +16,7 @@ describe('CreateBlogForm component', () => {
 
     render(
       <Router>
-        <CreateBlogForm createBlog={mockCreateBlog} />
+        <CreateBlogForm createBlog={mockCreateBlog} userId='testid'/>
       </Router>
     )
 
