@@ -98,6 +98,7 @@ const App = () => {
         await blogService.remove(blogToRemove.id)
         setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
         displayNotification(`Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`)
+        navigate('/')
       }
     } catch (error) {
       displayNotification(`Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`, 'error')

@@ -1,19 +1,13 @@
-import { useNavigate } from 'react-router-dom'
-
 import Togglable from './Togglable'
 import { Card, CardContent, Typography, Button, Link } from '@mui/material'
 
 const Blog = ({ blog, likeBlog, removeBlog, userId }) => {
-  const navigate = useNavigate()
   const showIfLoggedIn = { display: userId ? '' : 'none' }
   const showIfUserMatch = { display: userId === blog.user.id ? '' : 'none' }
 
   const handleLike = () => likeBlog(blog)
 
-  const handleRemove = () => {
-    removeBlog(blog)
-    navigate('/')
-  }
+  const handleRemove = () => removeBlog(blog)
 
   return (
     <Card className='blog'>
