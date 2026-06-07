@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
-import { Container, AppBar, Button, Toolbar } from '@mui/material'
+import { Container, AppBar, Button, Toolbar, Typography } from '@mui/material'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -113,6 +113,10 @@ const App = () => {
     <Container>
       <AppBar position="static">
         <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Blog App
+          </Typography>
+
           <Button color='inherit' component={Link} to='/'>blogs</Button>
           {user && <Button color='inherit' component={Link} to='/create'>new blog</Button>}
           {!user && <Button color='inherit' component={Link} to="/login">login</Button>}
