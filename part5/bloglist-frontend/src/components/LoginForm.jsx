@@ -1,12 +1,9 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 
 import LoginFieldInput from './LoginFieldInput'
 
 const LoginForm = ({ loginUser }) => {
-  const navigate = useNavigate()
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -16,8 +13,6 @@ const LoginForm = ({ loginUser }) => {
     loginUser({ username, password })
     setUsername('')
     setPassword('')
-
-    navigate('/')
   }
 
   return (

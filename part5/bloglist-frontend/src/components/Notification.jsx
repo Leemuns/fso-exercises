@@ -1,6 +1,7 @@
 import { useState, useImperativeHandle } from 'react'
+import { Alert } from '@mui/material'
 
-const Notification = props => {
+const Notification = (props) => {
   const [notification, setNotification] = useState(null)
 
   useImperativeHandle(props.ref, () => {
@@ -11,21 +12,10 @@ const Notification = props => {
     return null
   }
 
-  const { message, isError } = notification
-  const style = {
-    color: isError ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: '20px',
-    borderStyle: 'solid',
-    borderRadius: '5px',
-    padding: '10px',
-    marginBottom: '10px',
-  }
-
   return (
-    <div className="error" style={style}>
-      {message}
-    </div>
+    <Alert style={{ marginTop: 10, marginBottom: 10 }} severity={notification.type}>
+      {notification.message}
+    </Alert>
   )
 }
 

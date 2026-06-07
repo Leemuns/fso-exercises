@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
-import { Container } from '@mui/material'
+import { Container, AppBar, Button, Toolbar } from '@mui/material'
 
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
@@ -48,8 +48,9 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
+      navigate('/')
     } catch {
-      displayNotification('Invalid username or password', true)
+      displayNotification('Invalid username or password', 'error')
     }
   }
 
@@ -71,7 +72,7 @@ const App = () => {
       displayNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
     } catch (error) {
       const { title, author } = newBlogObject
-      displayNotification(`failed to add blog "${title}" by ${author}. Error: ${error}`, true)
+      displayNotification(`failed to add blog "${title}" by ${author}. Error: ${error}`, 'error')
     }
   }
 
@@ -87,7 +88,7 @@ const App = () => {
           .sort((a, b) => b.likes - a.likes)
       )
     } catch (error) {
-      displayNotification(`Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`, true)
+      displayNotification(`Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`, 'error')
     }
   }
 
@@ -99,26 +100,25 @@ const App = () => {
         displayNotification(`Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`)
       }
     } catch (error) {
-      displayNotification(`Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`, true)
+      displayNotification(`Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`, 'error')
     }
   }
 
-  const displayNotification = (message, isError = false) => {
-    notificationRef.current.setNotification({ message, isError })
+  const displayNotification = (message, type = 'success') => {
+    notificationRef.current.setNotification({ message, type })
     setTimeout(() => notificationRef.current.setNotification(null), 3000)
-  }
-
-  const padding = {
-    padding: 5
   }
 
   return (
     <Container>
-      <div>
-        <Link style={padding} to='/'>blogs</Link>
-        {user && <Link style={padding} to='/create'>new blog</Link>}
-        {!user ? <Link style={padding} to="/login">login</Link> : <button onClick={handleLogout}>Logout</button>}
-      </div>
+      <AppBar position="static">
+        <Toolbar>
+          <Button color='inherit' component={Link} to='/'>blogs</Button>
+          {user && <Button color='inherit' component={Link} to='/create'>new blog</Button>}
+          {!user && <Button color='inherit' component={Link} to="/login">login</Button>}
+          {user && <Button color='inherit' onClick={handleLogout}>Logout</Button>}
+        </Toolbar>
+      </AppBar>
 
       <Notification ref={notificationRef} />
 
