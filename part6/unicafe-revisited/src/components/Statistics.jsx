@@ -1,4 +1,4 @@
-import { useGood, useNeutral, useBad } from './store'
+import { useGood, useNeutral, useBad } from '../store'
 
 const Statistics = () => {
   const good = useGood()
