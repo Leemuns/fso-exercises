@@ -21,12 +21,15 @@ const asObject = anecdote => ({
 const useAnecdoteStore = create(set => ({
   anecdotes: anecdotesAtStart.map(asObject),
   actions: {
-    incrementVotes: (anecdoteId) => set(state => {
+    incrementVotes: anecdoteId => set(state => {
       return { anecdotes: state.anecdotes.map(anecdote => 
         anecdote.id === anecdoteId 
         ? { ...anecdote, votes: anecdote.votes + 1 } 
         : anecdote
       )}
+    }),
+    createAnecdote: anecdoteContent => set(state => {
+      return { anecdotes: state.anecdotes.concat({ content: anecdoteContent, id: getId(), votes: 0 })}
     })
   },
 }))
