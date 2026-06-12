@@ -1,18 +1,18 @@
 import { useAnecdoteActions } from '../store'
 
 const AnecdoteForm = () => {
-  const { createAnecdote } = useAnecdoteActions()
+  const { add } = useAnecdoteActions()
 
-  const addAnecdote = event => {
+  const handleCreate = event => {
     event.preventDefault()
-    createAnecdote(event.target.anecdote.value)
+    add(event.target.anecdote.value)
     event.target.reset()
   }
 
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={addAnecdote}>
+      <form onSubmit={handleCreate}>
         <div>
           <input name="anecdote"/>
         </div>

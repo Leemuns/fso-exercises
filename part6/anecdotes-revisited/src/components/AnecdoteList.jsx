@@ -2,10 +2,10 @@ import { useAnecdotes, useAnecdoteActions } from '../store'
 
 const AnecdoteList = () => {
   const anecdotes = useAnecdotes()
-  const { incrementVotes} = useAnecdoteActions()
+  const { vote } = useAnecdoteActions()
 
-  const vote = id => {
-    incrementVotes(id)
+  const handleVote = id => {
+    vote(id)
   }
 
   return (
@@ -16,7 +16,7 @@ const AnecdoteList = () => {
               <div>{anecdote.content}</div>
               <div>
                 has {anecdote.votes}
-                <button onClick={() => vote(anecdote.id)}>vote</button>
+                <button onClick={() => handleVote(anecdote.id)}>vote</button>
               </div>
             </div>
           ))
