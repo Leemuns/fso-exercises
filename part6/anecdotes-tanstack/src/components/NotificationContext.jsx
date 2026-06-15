@@ -14,6 +14,7 @@ export const NotificationContextProvider = (props) => {
     setNotification(message)
     notificationTimeout = setTimeout(() => setNotification(null), 5000)
   }
+  
   return (
     <NotificationContext.Provider value={{ notification, displayNotification }}>
       {props.children}
