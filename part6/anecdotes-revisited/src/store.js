@@ -29,7 +29,7 @@ const useAnecdoteStore = create((set, get) => ({
       set(state => ({ anecdotes: state.anecdotes.filter(a => a.id !== id) }))
       useNotificationStore.getState().actions.display(`You removed "${truncate(removedAnecdote.content)}".`)
     },
-    setFilter: value => set(() => ({ filter: value})),
+    setFilter: value => set(() => ({ filter: value })),
     initialize: async () => {
       const anecdotes = await anecdoteService.getAll()
       set(() => ({ anecdotes }))
@@ -58,3 +58,5 @@ export const useAnecdotes = () => {
 }
 export const useAnecdoteActions = () => useAnecdoteStore((state) => state.actions)
 export const useNotification = () => useNotificationStore((state) => state.notification)
+
+export default useAnecdoteStore
