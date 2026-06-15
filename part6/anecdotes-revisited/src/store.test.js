@@ -4,6 +4,7 @@ import { renderHook, act } from '@testing-library/react'
 vi.mock('./services/anecdotes', () => ({
   default: {
     getAll: vi.fn(),
+    update: vi.fn()
   }
 }))
 
@@ -29,22 +30,31 @@ describe('anecdote store hooks', () => {
     expect(useAnecdoteStore.getState().anecdotes).toStrictEqual(mockAnecdotes)
   })
 
-  it('Components receive anecdotes sorted by votes', async () => {
-    const mockAnecdotes = [
+  it('components receive anecdotes sorted by votes', async () => {
+    const anecdotes = [
       { id: 1, content: 'Test anecdote.', votes: 4 },
       { id: 2, content: 'Boring anecdote.', votes: 2 },
       { id: 3, content: 'Interesting anecdote.', votes: 7 }
     ]
-    anecdoteService.getAll.mockResolvedValue(mockAnecdotes)
-
-    const { result } = renderHook(() => useAnecdoteActions())
-
-    await act(async () => {
-      await result.current.initialize()
-    })
+    useAnecdoteStore.setState({ anecdotes })
 
     const { result: anecdotesResult } = renderHook(() => useAnecdotes())
-    expect(anecdotesResult.current).toStrictEqual(mockAnecdotes.toSorted((a, b) => b.votes - a.votes))
+    expect(anecdotesResult.current).toStrictEqual(anecdotes.toSorted((a, b) => b.votes - a.votes))
+  })
+
+  it('voting an anecdote increases its number of votes', async () => {
+    const anecdotes = [{ id: 1, content: 'Test anecdote.', votes: 4 }]
+    useAnecdoteStore.setState({ anecdotes })
+    
+    const mockAnecdote = anecdotes[0]
+    anecdoteService.update.mockResolvedValue({ ...mockAnecdote, votes: mockAnecdote.votes + 1 })
+
+    const { result } = renderHook(() => useAnecdoteActions())
+    await act(async () => {
+      await result.current.vote(1)
+    })
+    expect(useAnecdoteStore.getState().anecdotes[0].votes).toStrictEqual(anecdotes[0].votes + 1)
+
   })
 
   describe('useAnecdote filtering', () => {
