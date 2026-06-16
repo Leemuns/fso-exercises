@@ -24,4 +24,15 @@ const createNew = async (object) => {
   return await response.json()
 }
 
-export default { getAll, createNew }
+const remove = async (objectId) => {
+  const response = await fetch(`${baseUrl}/${objectId}`, { method: 'DELETE' })
+
+  if (!response.ok) {
+    throw new Error('Failed to remove anecdote')
+  }
+
+  return await response.json()
+}
+
+
+export default { getAll, createNew, remove }
