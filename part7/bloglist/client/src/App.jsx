@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
 import { Container, AppBar, Button, Toolbar, Typography } from '@mui/material'
 
@@ -10,12 +10,13 @@ import Blog from './components/Blog'
 import ErrorBoundary from './components/ErrorBoundary'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import useNotification from './hooks/useNotification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
-  const notificationRef = useRef()
+  const { displayMessage } = useNotification()
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
   const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
@@ -48,7 +49,7 @@ const App = () => {
       setUser(user)
       navigate('/')
     } catch {
-      displayNotification('Invalid username or password', 'error')
+      displayMessage('Invalid username or password', 'error')
     }
   }
 
@@ -67,12 +68,10 @@ const App = () => {
         id: user.id,
       }
       setBlogs(blogs.concat(newBlog))
-      displayNotification(
-        `a new blog ${newBlog.title} by ${newBlog.author} added`,
-      )
+      displayMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
     } catch (error) {
       const { title, author } = newBlogObject
-      displayNotification(
+      displayMessage(
         `failed to add blog "${title}" by ${author}. Error: ${error}`,
         'error',
       )
@@ -92,7 +91,7 @@ const App = () => {
           .sort((a, b) => b.likes - a.likes),
       )
     } catch (error) {
-      displayNotification(
+      displayMessage(
         `Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`,
         'error',
       )
@@ -108,22 +107,17 @@ const App = () => {
       ) {
         await blogService.remove(blogToRemove.id)
         setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id))
-        displayNotification(
+        displayMessage(
           `Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`,
         )
         navigate('/')
       }
     } catch (error) {
-      displayNotification(
+      displayMessage(
         `Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`,
         'error',
       )
     }
-  }
-
-  const displayNotification = (message, type = 'success') => {
-    notificationRef.current.setNotification({ message, type })
-    setTimeout(() => notificationRef.current.setNotification(null), 3000)
   }
 
   return (
@@ -155,7 +149,7 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification ref={notificationRef} />
+      <Notification />
 
       <ErrorBoundary>
         <Routes>

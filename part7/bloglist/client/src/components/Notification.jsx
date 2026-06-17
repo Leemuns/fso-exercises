@@ -1,12 +1,9 @@
-import { useState, useImperativeHandle } from 'react'
 import { Alert } from '@mui/material'
 
-const Notification = (props) => {
-  const [notification, setNotification] = useState(null)
+import useNotification from '../hooks/useNotification'
 
-  useImperativeHandle(props.ref, () => {
-    return { setNotification }
-  })
+const Notification = () => {
+  const { notification } = useNotification()
 
   if (!notification) {
     return null
