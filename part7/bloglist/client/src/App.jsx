@@ -142,36 +142,13 @@ const App = () => {
           <Route path='/' element={
             <Blogs blogs={blogs} />
           } />
+          <Route path='*' element={
+            <h2>404 - Page not found</h2>
+          } />
         </Routes>
       </ErrorBoundary>
     </Container>
   )
-
-  // if (!user) {
-  //   return (
-  //     <div>
-  //       <h2>log in to application</h2>
-  //       <Notification ref={notificationRef}/>
-  //       <LoginForm loginUser={loginUser} />
-  //     </div>
-  //   )
-  // } else {
-  //   return (
-  //     <div>
-  //       <h2>blogs</h2>
-
-  //       <Notification ref={notificationRef} />
-
-  //       <p>{user.name} logged in <button onClick={handleLogout}>Logout</button></p>
-
-  //       <Togglable buttonLabel='create new blog'>
-  //         <CreateBlogForm createBlog={createBlog} />
-  //       </Togglable>
-
-  //       <Blogs blogs={blogs} handleLikeBlog={handleLikeBlog} handleRemoveBlog={handleRemoveBlog} userId={user.id}/>
-  //     </div>
-  //   )
-  // }
 }
 
 export default App
