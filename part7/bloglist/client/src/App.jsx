@@ -8,6 +8,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
+import ErrorBoundary from './components/ErrorBoundary'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -127,20 +128,22 @@ const App = () => {
 
       <Notification ref={notificationRef} />
 
-      <Routes>
-        <Route path="/blogs/:id" element={
-          <Blog blog={blog} likeBlog={likeBlog} removeBlog={removeBlog} userId={userId} />
-        } />
-        <Route path='/login' element={
-          <LoginForm loginUser={loginUser} />
-        } />
-        <Route path='/create' element={
-          <CreateBlogForm createBlog={createBlog} userId={userId}/>
-        } />
-        <Route path='/' element={
-          <Blogs blogs={blogs} />
-        } />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/blogs/:id" element={
+            <Blog blog={blog} likeBlog={likeBlog} removeBlog={removeBlog} userId={userId} />
+          } />
+          <Route path='/login' element={
+            <LoginForm loginUser={loginUser} />
+          } />
+          <Route path='/create' element={
+            <CreateBlogForm createBlog={createBlog} userId={userId}/>
+          } />
+          <Route path='/' element={
+            <Blogs blogs={blogs} />
+          } />
+        </Routes>
+      </ErrorBoundary>
     </Container>
   )
 

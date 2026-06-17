@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material'
 
 const FieldInputLogin = ({ label, value, setValue, type = 'text' }) => {
+  // throw new Error('simulated error')
   return (
     <div>
       <TextField
