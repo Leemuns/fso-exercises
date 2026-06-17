@@ -6,10 +6,10 @@ const FieldInput = ({ label, value, setValue }) => {
       <TextField
         label={label}
         value={value}
-        onChange={event => setValue(event.target.value)}
-        variant='outlined'
-        size='small'
-        margin='dense'
+        onChange={(event) => setValue(event.target.value)}
+        variant="outlined"
+        size="small"
+        margin="dense"
       />
     </div>
   )

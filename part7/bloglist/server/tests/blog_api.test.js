@@ -12,7 +12,8 @@ const User = require('../models/user')
 const api = supertest(app)
 
 before(async () => {
-  const response = await api.post('/api/login')
+  const response = await api
+    .post('/api/login')
     .send({ username: 'root', password: 'root123' })
 
   api.userToken = response.body.token
@@ -26,7 +27,10 @@ before(async () => {
 })
 
 beforeEach(async () => {
-  const initialBlogsRoot = helper.initialBlogs.map(blog => ({ ...blog, user: api.user.id }))
+  const initialBlogsRoot = helper.initialBlogs.map((blog) => ({
+    ...blog,
+    user: api.user.id,
+  }))
 
   await Blog.deleteMany()
   await Blog.insertMany(initialBlogsRoot)
@@ -34,7 +38,8 @@ beforeEach(async () => {
 
 describe('GET /api/blogs', () => {
   test('all blogs are returned as JSON', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api
+      .get('/api/blogs')
       .expect(200)
       .expect('Content-type', /application\/json/)
 
@@ -54,17 +59,18 @@ describe('POST /api/blogs', () => {
       title: 'New test note',
       author: 'System',
       url: 'https://idontexist.com/',
-      likes: 150
+      likes: 150,
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .set('Authorization', `Bearer ${api.userToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/blogs')
-    const addedBlog = response.body.find(r => r.title === newBlog.title)
+    const addedBlog = response.body.find((r) => r.title === newBlog.title)
     delete addedBlog.id
     delete addedBlog.user
 
@@ -79,14 +85,15 @@ describe('POST /api/blogs', () => {
       url: 'https://idontexist.com/',
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .set('Authorization', `Bearer ${api.userToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/blogs')
-    const addedBlog = response.body.find(r => r.title === newBlog.title)
+    const addedBlog = response.body.find((r) => r.title === newBlog.title)
 
     assert.deepStrictEqual(addedBlog.likes, 0)
   })
@@ -97,7 +104,8 @@ describe('POST /api/blogs', () => {
       url: 'https://idontexist.com/',
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .set('Authorization', `Bearer ${api.userToken}`)
       .send(newBlog)
       .expect(400)
@@ -109,7 +117,8 @@ describe('POST /api/blogs', () => {
       author: 'System',
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .set('Authorization', `Bearer ${api.userToken}`)
       .send(newBlog)
       .expect(400)
@@ -120,12 +129,10 @@ describe('POST /api/blogs', () => {
       title: 'New test note',
       author: 'System',
       url: 'https://idontexist.com/',
-      likes: 150
+      likes: 150,
     }
 
-    await api.post('/api/blogs')
-      .send(newBlog)
-      .expect(401)
+    await api.post('/api/blogs').send(newBlog).expect(401)
 
     const response = await api.get('/api/blogs')
 
@@ -138,13 +145,14 @@ describe('deleting blogs', () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
       .set('Authorization', `Bearer ${api.userToken}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
-    const ids = blogsAtEnd.map(blog => blog.id)
+    const ids = blogsAtEnd.map((blog) => blog.id)
     assert(!ids.includes(blogToDelete.id))
 
     assert.strictEqual(blogsAtStart.length, helper.initialBlogs.length)
@@ -156,7 +164,8 @@ describe('putting blogs', () => {
     const blogToUpdate = await helper.firstBlogInDb()
     const newLikeValue = 150
 
-    await api.put(`/api/blogs/${blogToUpdate.id}`)
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
       .send({ likes: newLikeValue })
       .expect(204)
 
@@ -173,13 +182,14 @@ describe('putting blogs', () => {
       title: 'New test note',
       author: 'Server',
       url: 'https://idontexist.com/',
-      likes: 0
+      likes: 0,
     }
 
     const blogsAtStart = await helper.blogsInDb()
 
     const nonExistingId = await helper.nonExistingId()
-    const putResponse = await api.put(`/api/blogs/${nonExistingId}`)
+    const putResponse = await api
+      .put(`/api/blogs/${nonExistingId}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)

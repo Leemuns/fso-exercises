@@ -11,13 +11,13 @@ describe('CreateBlogForm component', () => {
     const newBlog = {
       title: 'test name',
       author: 'test author',
-      url: 'test url'
+      url: 'test url',
     }
 
     render(
       <Router>
-        <CreateBlogForm createBlog={mockCreateBlog} userId='testid'/>
-      </Router>
+        <CreateBlogForm createBlog={mockCreateBlog} userId="testid" />
+      </Router>,
     )
 
     const createButton = screen.getByText('create')

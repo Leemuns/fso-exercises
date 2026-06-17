@@ -6,56 +6,56 @@ const initialBlogs = [
     title: 'React patterns',
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
-    likes: 7
+    likes: 7,
   },
   {
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 5
+    likes: 5,
   },
   {
     title: 'Canonical string reduction',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-    likes: 12
+    likes: 12,
   },
   {
     title: 'First class tests',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10
+    likes: 10,
   },
   {
     title: 'TDD harms architecture',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    likes: 0
+    likes: 0,
   },
   {
     title: 'Type wars',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    likes: 2
-  }
+    likes: 2,
+  },
 ]
 
 const initialUsers = [
   {
     username: 'root',
     name: 'ROOT',
-    password: 'root123'
+    password: 'root123',
   },
   {
     username: 'test_user',
     name: 'test user',
-    password: 'testing123'
-  }
+    password: 'testing123',
+  },
 ]
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
-  return blogs.map(note => note.toJSON())
+  return blogs.map((note) => note.toJSON())
 }
 
 const firstBlogInDb = async () => {
@@ -64,7 +64,10 @@ const firstBlogInDb = async () => {
 }
 
 const nonExistingId = async () => {
-  const blog = new Blog({ title: 'willremovethissoon', url: 'https://fakeurl.com/' })
+  const blog = new Blog({
+    title: 'willremovethissoon',
+    url: 'https://fakeurl.com/',
+  })
   await blog.save()
   await blog.deleteOne()
 
@@ -73,7 +76,7 @@ const nonExistingId = async () => {
 
 const usersInDb = async () => {
   const users = await User.find({})
-  return users.map(u => u.toJSON())
+  return users.map((u) => u.toJSON())
 }
 
 module.exports = {
@@ -82,5 +85,5 @@ module.exports = {
   blogsInDb,
   firstBlogInDb,
   nonExistingId,
-  usersInDb
+  usersInDb,
 }

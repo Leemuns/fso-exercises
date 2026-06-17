@@ -5,7 +5,6 @@ import { Container, AppBar, Button, Toolbar, Typography } from '@mui/material'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -19,9 +18,7 @@ const App = () => {
   const notificationRef = useRef()
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
-  const blog = match
-    ? blogs.find(blog => blog.id === match.params.id)
-    : null
+  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
   const userId = user?.id ?? null
 
   useEffect(() => {
@@ -43,7 +40,7 @@ const App = () => {
     }
   }, [])
 
-  const loginUser = async userCredentials => {
+  const loginUser = async (userCredentials) => {
     try {
       const user = await loginService.login(userCredentials)
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
@@ -67,13 +64,18 @@ const App = () => {
       newBlog.user = {
         username: user.username,
         name: user.name,
-        id: user.id
+        id: user.id,
       }
       setBlogs(blogs.concat(newBlog))
-      displayNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+      displayNotification(
+        `a new blog ${newBlog.title} by ${newBlog.author} added`,
+      )
     } catch (error) {
       const { title, author } = newBlogObject
-      displayNotification(`failed to add blog "${title}" by ${author}. Error: ${error}`, 'error')
+      displayNotification(
+        `failed to add blog "${title}" by ${author}. Error: ${error}`,
+        'error',
+      )
     }
   }
 
@@ -85,24 +87,37 @@ const App = () => {
 
       await blogService.update(id, blogWithoutId)
       setBlogs(
-        blogs.map(blog => blog.id === id ? updatedBlog : blog)
-          .sort((a, b) => b.likes - a.likes)
+        blogs
+          .map((blog) => (blog.id === id ? updatedBlog : blog))
+          .sort((a, b) => b.likes - a.likes),
       )
     } catch (error) {
-      displayNotification(`Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`, 'error')
+      displayNotification(
+        `Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`,
+        'error',
+      )
     }
   }
 
   const removeBlog = async (blogToRemove) => {
     try {
-      if (window.confirm(`Remove blog "${blogToRemove.title} by ${blogToRemove.author}"`)) {
+      if (
+        window.confirm(
+          `Remove blog "${blogToRemove.title} by ${blogToRemove.author}"`,
+        )
+      ) {
         await blogService.remove(blogToRemove.id)
-        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
-        displayNotification(`Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`)
+        setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id))
+        displayNotification(
+          `Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`,
+        )
         navigate('/')
       }
     } catch (error) {
-      displayNotification(`Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`, 'error')
+      displayNotification(
+        `Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`,
+        'error',
+      )
     }
   }
 
@@ -119,10 +134,24 @@ const App = () => {
             Blog App
           </Typography>
 
-          <Button color='inherit' component={Link} to='/'>blogs</Button>
-          {user && <Button color='inherit' component={Link} to='/create'>new blog</Button>}
-          {!user && <Button color='inherit' component={Link} to="/login">login</Button>}
-          {user && <Button color='inherit' onClick={handleLogout}>Logout</Button>}
+          <Button color="inherit" component={Link} to="/">
+            blogs
+          </Button>
+          {user && (
+            <Button color="inherit" component={Link} to="/create">
+              new blog
+            </Button>
+          )}
+          {!user && (
+            <Button color="inherit" component={Link} to="/login">
+              login
+            </Button>
+          )}
+          {user && (
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 
@@ -130,21 +159,24 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-          <Route path="/blogs/:id" element={
-            <Blog blog={blog} likeBlog={likeBlog} removeBlog={removeBlog} userId={userId} />
-          } />
-          <Route path='/login' element={
-            <LoginForm loginUser={loginUser} />
-          } />
-          <Route path='/create' element={
-            <CreateBlogForm createBlog={createBlog} userId={userId}/>
-          } />
-          <Route path='/' element={
-            <Blogs blogs={blogs} />
-          } />
-          <Route path='*' element={
-            <h2>404 - Page not found</h2>
-          } />
+          <Route
+            path="/blogs/:id"
+            element={
+              <Blog
+                blog={blog}
+                likeBlog={likeBlog}
+                removeBlog={removeBlog}
+                userId={userId}
+              />
+            }
+          />
+          <Route path="/login" element={<LoginForm loginUser={loginUser} />} />
+          <Route
+            path="/create"
+            element={<CreateBlogForm createBlog={createBlog} userId={userId} />}
+          />
+          <Route path="/" element={<Blogs blogs={blogs} />} />
+          <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>
     </Container>

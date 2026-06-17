@@ -7,11 +7,11 @@ const FieldInputLogin = ({ label, value, setValue, type = 'text' }) => {
       <TextField
         label={label}
         value={value}
-        onChange={event => setValue(event.target.value)}
+        onChange={(event) => setValue(event.target.value)}
         type={type}
-        variant='standard'
-        size='small'
-        margin='dense'
+        variant="standard"
+        size="small"
+        margin="dense"
         sx={{
           '& .MuiInputLabel-root': {
             transform: 'translate(14px, 16px) scale(1)',

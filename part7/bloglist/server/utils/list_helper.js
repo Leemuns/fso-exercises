@@ -4,7 +4,7 @@ const dummy = () => {
   return 1
 }
 
-const totalLikes = blogList => {
+const totalLikes = (blogList) => {
   if (!blogList.length) {
     return 0
   }
@@ -14,7 +14,7 @@ const totalLikes = blogList => {
   }, 0)
 }
 
-const favoriteBlog = blogList => {
+const favoriteBlog = (blogList) => {
   if (!blogList.length) {
     return null
   }
@@ -24,7 +24,7 @@ const favoriteBlog = blogList => {
   }, blogList[0])
 }
 
-const mostBlogs = blogList => {
+const mostBlogs = (blogList) => {
   if (!blogList.length) {
     return null
   }
@@ -35,22 +35,23 @@ const mostBlogs = blogList => {
     .maxBy('blogs')
 }
 
-const mostLikes = blogList => {
+const mostLikes = (blogList) => {
   if (!blogList.length) {
     return null
   }
 
   return _(blogList)
     .groupBy('author')
-    .map((likes, author) => { return { author, likes: _(likes).sumBy('likes') } })
+    .map((likes, author) => {
+      return { author, likes: _(likes).sumBy('likes') }
+    })
     .maxBy('likes')
 }
-
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  mostLikes
+  mostLikes,
 }

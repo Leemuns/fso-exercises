@@ -9,7 +9,7 @@ const blogList = [
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
     likes: 7,
-    __v: 0
+    __v: 0,
   },
   {
     _id: '5a422aa71b54a676234d17f8',
@@ -17,7 +17,7 @@ const blogList = [
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 5,
-    __v: 0
+    __v: 0,
   },
   {
     _id: '5a422b3a1b54a676234d17f9',
@@ -25,7 +25,7 @@ const blogList = [
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12,
-    __v: 0
+    __v: 0,
   },
   {
     _id: '5a422b891b54a676234d17fa',
@@ -33,7 +33,7 @@ const blogList = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
     likes: 10,
-    __v: 0
+    __v: 0,
   },
   {
     _id: '5a422ba71b54a676234d17fb',
@@ -41,7 +41,7 @@ const blogList = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
     likes: 0,
-    __v: 0
+    __v: 0,
   },
   {
     _id: '5a422bc61b54a676234d17fc',
@@ -49,8 +49,8 @@ const blogList = [
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     likes: 2,
-    __v: 0
-  }
+    __v: 0,
+  },
 ]
 
 test('dummy returns one', () => {
@@ -61,7 +61,7 @@ test('dummy returns one', () => {
 })
 
 describe('total likes', () => {
-  const listWithOneBlog = blogList.slice(1,2)
+  const listWithOneBlog = blogList.slice(1, 2)
 
   test('of empty list is zero', () => {
     const result = listHelper.totalLikes([])
@@ -86,7 +86,7 @@ describe('favorite blog', () => {
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12,
-    __v: 0
+    __v: 0,
   }
 
   const blogListManyFavorites = blogList.concat({
@@ -95,7 +95,7 @@ describe('favorite blog', () => {
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12,
-    __v: 0
+    __v: 0,
   })
 
   test('of empty list is null', () => {
@@ -117,12 +117,12 @@ describe('favorite blog', () => {
 describe('most blogs', () => {
   const authorMostBlogs = {
     author: 'Robert C. Martin',
-    blogs: 3
+    blogs: 3,
   }
 
   const authorMostBlogsMany = {
     author: 'Edsger W. Dijkstra',
-    blogs: 3
+    blogs: 3,
   }
 
   const blogListManyResults = blogList.concat({
@@ -131,7 +131,7 @@ describe('most blogs', () => {
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12,
-    __v: 0
+    __v: 0,
   })
 
   test('of empty list is null', () => {
@@ -153,7 +153,7 @@ describe('most blogs', () => {
 describe('most likes', () => {
   const authorMostLikes = {
     author: 'Edsger W. Dijkstra',
-    likes: 17
+    likes: 17,
   }
 
   let blogListManyResults = structuredClone(blogList)

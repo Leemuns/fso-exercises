@@ -23,7 +23,8 @@ describe('when there is initially two user in db', () => {
   })
 
   test('get returns a list of all users details', async () => {
-    const response = await api.get('/api/users')
+    const response = await api
+      .get('/api/users')
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
@@ -47,7 +48,8 @@ describe('when there is initially two user in db', () => {
       password: 'salainen',
     }
 
-    await api.post('/api/users')
+    await api
+      .post('/api/users')
       .send(newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -55,7 +57,7 @@ describe('when there is initially two user in db', () => {
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     assert(usernames.includes(newUser.username))
   })
 
@@ -67,14 +69,12 @@ describe('when there is initially two user in db', () => {
       password: 'ab',
     }
 
-    await api.post('/api/users')
-      .send(newUser)
-      .expect(400)
+    await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     assert(!usernames.includes(newUser.username))
   })
 
@@ -87,14 +87,12 @@ describe('when there is initially two user in db', () => {
       password: 'salainen',
     }
 
-    await api.post('/api/users')
-      .send(newUser)
-      .expect(400)
+    await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     assert(!usernames.includes(newUser.username))
   })
 
@@ -106,14 +104,12 @@ describe('when there is initially two user in db', () => {
       name: 'Matti Luukkainen',
     }
 
-    await api.post('/api/users')
-      .send(newUser)
-      .expect(400)
+    await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     assert(!usernames.includes(newUser.username))
   })
 
@@ -126,14 +122,12 @@ describe('when there is initially two user in db', () => {
       password: 'ab',
     }
 
-    await api.post('/api/users')
-      .send(newUser)
-      .expect(400)
+    await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     assert(!usernames.includes(newUser.username))
   })
 
@@ -142,9 +136,7 @@ describe('when there is initially two user in db', () => {
 
     const newUser = helper.initialUsers[0]
 
-    await api.post('/api/users')
-      .send(newUser)
-      .expect(400)
+    await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)

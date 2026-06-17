@@ -7,7 +7,7 @@ const LoginForm = ({ loginUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = event => {
+  const handleLogin = (event) => {
     event.preventDefault()
 
     loginUser({ username, password })
@@ -20,15 +20,15 @@ const LoginForm = ({ loginUser }) => {
       <h2 style={{ marginBottom: '6px' }}>Log in to application</h2>
 
       <LoginFieldInput
-        label='username'
+        label="username"
         value={username}
         setValue={setUsername}
       />
       <LoginFieldInput
-        label='password'
+        label="password"
         value={password}
         setValue={setPassword}
-        type='password'
+        type="password"
       />
 
       <Button type="submit" variant="contained" style={{ marginTop: 10 }}>

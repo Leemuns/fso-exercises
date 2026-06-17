@@ -13,17 +13,23 @@ describe('Blog component', () => {
     user: {
       username: 'root',
       name: 'Root User',
-      id: '6a1961fed3c5812e7ef8c518'
-    }
+      id: '6a1961fed3c5812e7ef8c518',
+    },
   }
 
-  test('without login, blog\'s title, author, url, likes, and user are rendered while buttons are not shown', () => {
-    render(<Router><Blog blog={blog} /></Router>)
+  test("without login, blog's title, author, url, likes, and user are rendered while buttons are not shown", () => {
+    render(
+      <Router>
+        <Blog blog={blog} />
+      </Router>,
+    )
 
     const blogElement = screen.getByText('Type wars Robert C. Martin')
     expect(blogElement).toBeDefined()
 
-    const urlElement = screen.getByText('http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html')
+    const urlElement = screen.getByText(
+      'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    )
     const likesElement = screen.getByText('likes 2')
     const userNameElement = screen.getByText('Root User')
     expect(urlElement).toBeVisible()
@@ -37,14 +43,18 @@ describe('Blog component', () => {
   })
 
   test('authenticated users who are not the creator are also shown the like button', () => {
-    render(<Router>
-      <Blog blog={blog} userId='6a1961fed3c5812e7ef8fake' />
-    </Router>)
+    render(
+      <Router>
+        <Blog blog={blog} userId="6a1961fed3c5812e7ef8fake" />
+      </Router>,
+    )
 
     const blogElement = screen.getByText('Type wars Robert C. Martin')
     expect(blogElement).toBeDefined()
 
-    const urlElement = screen.getByText('http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html')
+    const urlElement = screen.getByText(
+      'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    )
     const likesElement = screen.getByText('likes 2')
     const userNameElement = screen.getByText('Root User')
     const likeButton = screen.getByText('like')
@@ -58,14 +68,18 @@ describe('Blog component', () => {
   })
 
   test('blog’s creator is shown the delete button', () => {
-    render(<Router>
-      <Blog blog={blog} userId={blog.user.id} />
-    </Router>)
+    render(
+      <Router>
+        <Blog blog={blog} userId={blog.user.id} />
+      </Router>,
+    )
 
     const blogElement = screen.getByText('Type wars Robert C. Martin')
     expect(blogElement).toBeDefined()
 
-    const urlElement = screen.getByText('http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html')
+    const urlElement = screen.getByText(
+      'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    )
     const likesElement = screen.getByText('likes 2')
     const userNameElement = screen.getByText('Root User')
     const likeButton = screen.getByText('like')
@@ -81,9 +95,11 @@ describe('Blog component', () => {
     const mockLikeBlog = vi.fn()
     const user = userEvent.setup()
 
-    render(<Router>
-      <Blog blog={blog} userId={blog.user.id} likeBlog={mockLikeBlog} />
-    </Router>)
+    render(
+      <Router>
+        <Blog blog={blog} userId={blog.user.id} likeBlog={mockLikeBlog} />
+      </Router>,
+    )
 
     const likeButton = screen.getByText('like')
     await user.click(likeButton)
