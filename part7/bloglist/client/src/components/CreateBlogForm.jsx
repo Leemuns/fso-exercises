@@ -1,30 +1,30 @@
-import { useState } from 'react'
 import { Button } from '@mui/material'
 
 import FieldInput from './FieldInput'
 import useBlogs from '../hooks/useBlogs'
+import useField from '../hooks/useField'
 
 const CreateBlogForm = ({ user }) => {
   const { addBlog } = useBlogs()
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('title', 'create')
+  const author = useField('author', 'create')
+  const url = useField('url', 'create')
 
   const handleAddBlog = (event) => {
     event.preventDefault()
 
-    const newBlog = { title, author, url }
-    newBlog.user = {
-      username: user.username,
-      name: user.name,
-      id: user.id,
+    const formData = {
+      title: event.target.elements.title.value,
+      author: event.target.elements.author.value,
+      url: event.target.elements.url.value,
     }
+    const { username, name, id } = user
+    addBlog({ ...formData, user: { username, name, id } })
 
-    addBlog(newBlog)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    title.clear()
+    author.clear()
+    url.clear()
   }
 
   if (!user.id) {
@@ -38,9 +38,9 @@ const CreateBlogForm = ({ user }) => {
   return (
     <form onSubmit={handleAddBlog}>
       <h2>Create new</h2>
-      <FieldInput label="title" value={title} setValue={setTitle} />
-      <FieldInput label="author" value={author} setValue={setAuthor} />
-      <FieldInput label="url" value={url} setValue={setUrl} />
+      <FieldInput {...title} />
+      <FieldInput {...author} />
+      <FieldInput {...url} />
 
       <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
         create

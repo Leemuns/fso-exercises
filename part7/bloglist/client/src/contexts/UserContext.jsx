@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import persistentUserService from '../services/persistentUser'
 import useNotification from '../hooks/useNotification'
 
 const UserContext = createContext()
@@ -15,9 +16,8 @@ export const UserContextProvider = (props) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
+    const user = persistentUserService.getUser()
+    if (user) {
       setUser(user)
       blogService.setToken(user.token)
     }
@@ -26,7 +26,7 @@ export const UserContextProvider = (props) => {
   const loginUser = async (userCredentials) => {
     try {
       const user = await loginService.login(userCredentials)
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      persistentUserService.saveUser(JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       navigate('/')
@@ -37,7 +37,7 @@ export const UserContextProvider = (props) => {
 
   const logoutUser = () => {
     setUser(null)
-    window.localStorage.removeItem('loggedUser')
+    persistentUserService.removeUser()
     navigate('/')
   }
 

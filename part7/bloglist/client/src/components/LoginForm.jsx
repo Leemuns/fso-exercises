@@ -1,38 +1,33 @@
-import { useState } from 'react'
 import { Button } from '@mui/material'
 
-import LoginFieldInput from './LoginFieldInput'
+import useField from '../hooks/useField'
+import FieldInput from './FieldInput'
 
 const LoginForm = ({ loginUser }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('username', 'login')
+  const password = useField('password', 'login', 'password')
 
   const handleLogin = (event) => {
     event.preventDefault()
 
-    loginUser({ username, password })
-    setUsername('')
-    setPassword('')
+    const formData = {
+      username: event.target.elements.username.value,
+      password: event.target.elements.password.value,
+    }
+    loginUser(formData)
+    username.clear()
+    password.clear()
   }
 
   return (
     <form onSubmit={handleLogin}>
       <h2 style={{ marginBottom: '6px' }}>Log in to application</h2>
 
-      <LoginFieldInput
-        label="username"
-        value={username}
-        setValue={setUsername}
-      />
-      <LoginFieldInput
-        label="password"
-        value={password}
-        setValue={setPassword}
-        type="password"
-      />
+      <FieldInput {...username} />
+      <FieldInput {...password} />
 
       <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
-        LOGIN
+        login
       </Button>
     </form>
   )
