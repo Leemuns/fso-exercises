@@ -1,11 +1,13 @@
 import { Button } from '@mui/material'
 
 import FieldInput from './FieldInput'
+import useCurrentUser from '../hooks/useCurrentUser'
 import useBlogs from '../hooks/useBlogs'
 import useField from '../hooks/useField'
 
-const CreateBlogForm = ({ user }) => {
+const CreateBlogForm = () => {
   const { addBlog } = useBlogs()
+  const { user } = useCurrentUser()
 
   const title = useField('title', 'create')
   const author = useField('author', 'create')

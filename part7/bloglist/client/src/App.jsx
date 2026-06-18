@@ -6,11 +6,13 @@ import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import Blog from './components/Blog'
+import User from './components/User'
+import UserList from './components/UserList'
 import ErrorBoundary from './components/ErrorBoundary'
-import useUser from './hooks/useUser'
+import useCurrentUser from './hooks/useCurrentUser'
 
 const App = () => {
-  const { user, loginUser, logoutUser } = useUser()
+  const { user, logoutUser } = useCurrentUser()
 
   return (
     <Container>
@@ -22,6 +24,9 @@ const App = () => {
 
           <Button color="inherit" component={Link} to="/">
             blogs
+          </Button>
+          <Button color="inherit" component={Link} to="/users">
+            Users
           </Button>
           {user && (
             <Button color="inherit" component={Link} to="/create">
@@ -45,9 +50,11 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-          <Route path="/blogs/:blogId" element={<Blog userId={user?.id} />} />
-          <Route path="/login" element={<LoginForm loginUser={loginUser} />} />
-          <Route path="/create" element={<CreateBlogForm user={user} />} />
+          <Route path="/blogs/:blogId" element={<Blog />} />
+          <Route path="/users/:userId" element={<User />} />
+          <Route path="/users" element={<UserList />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/create" element={<CreateBlogForm />} />
           <Route path="/" element={<BlogList />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>

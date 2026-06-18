@@ -1,4 +1,3 @@
-import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 let token = null
@@ -7,24 +6,36 @@ const setToken = (newToken) => {
 }
 
 const getAll = async () => {
-  const response = await axios.get(baseUrl)
-  return response.data
+  const response = await fetch(baseUrl)
+  if (!response.ok) throw new Error('Failed to fetch blogs')
+  return await response.json()
 }
 
 const create = async (newBlog) => {
-  const config = { headers: { Authorization: token } }
-  const response = await axios.post(baseUrl, newBlog, config)
-  return response.data
+  const response = await fetch(baseUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: token },
+    body: JSON.stringify(newBlog),
+  })
+  if (!response.ok) throw new Error('Failed to create new blog')
+  return await response.json()
 }
 
 const remove = async (blogId) => {
-  const config = { headers: { Authorization: token } }
-  await axios.delete(`${baseUrl}/${blogId}`, config)
+  const response = await fetch(`${baseUrl}/${blogId}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', Authorization: token },
+  })
+  if (!response.ok) throw new Error('Failed to delete blog')
 }
 
 const update = async (blogId, newBlog) => {
-  const config = { headers: { Authorization: token } }
-  await axios.put(`${baseUrl}/${blogId}`, newBlog, config)
+  const response = await fetch(`${baseUrl}/${blogId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: token },
+    body: JSON.stringify(newBlog),
+  })
+  if (!response.ok) throw new Error('Failed to update blog')
 }
 
 export default { setToken, getAll, create, remove, update }

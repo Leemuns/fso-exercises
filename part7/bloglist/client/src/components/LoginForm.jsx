@@ -1,9 +1,12 @@
 import { Button } from '@mui/material'
 
+import useCurrentUser from '../hooks/useCurrentUser'
 import useField from '../hooks/useField'
 import FieldInput from './FieldInput'
 
-const LoginForm = ({ loginUser }) => {
+const LoginForm = () => {
+  const { loginUser } = useCurrentUser()
+
   const username = useField('username', 'login')
   const password = useField('password', 'login', 'password')
 

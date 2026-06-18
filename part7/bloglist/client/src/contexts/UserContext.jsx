@@ -26,7 +26,7 @@ export const UserContextProvider = (props) => {
   const loginUser = async (userCredentials) => {
     try {
       const user = await loginService.login(userCredentials)
-      persistentUserService.saveUser(JSON.stringify(user))
+      persistentUserService.saveUser(user)
       blogService.setToken(user.token)
       setUser(user)
       navigate('/')
