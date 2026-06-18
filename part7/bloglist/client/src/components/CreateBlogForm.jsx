@@ -3,18 +3,27 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 
 import FieldInput from './FieldInput'
+import useBlogs from '../hooks/useBlogs'
 
-const CreateBlogForm = ({ createBlog, userId }) => {
+const CreateBlogForm = ({ user }) => {
   const navigate = useNavigate()
+  const { addBlog } = useBlogs()
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const addBlog = (event) => {
+  const handleAddBlog = (event) => {
     event.preventDefault()
 
-    createBlog({ title, author, url })
+    const newBlog = { title, author, url }
+    newBlog.user = {
+      username: user.username,
+      name: user.name,
+      id: user.id,
+    }
+
+    addBlog(newBlog)
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -22,7 +31,7 @@ const CreateBlogForm = ({ createBlog, userId }) => {
     navigate('/')
   }
 
-  if (!userId) {
+  if (!user.id) {
     return (
       <div>
         <p>User not logged in</p>
@@ -31,7 +40,7 @@ const CreateBlogForm = ({ createBlog, userId }) => {
   }
 
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={handleAddBlog}>
       <h2>Create new</h2>
       <FieldInput label="title" value={title} setValue={setTitle} />
       <FieldInput label="author" value={author} setValue={setAuthor} />

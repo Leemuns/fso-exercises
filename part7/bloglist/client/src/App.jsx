@@ -5,32 +5,26 @@ import { Container, AppBar, Button, Toolbar, Typography } from '@mui/material'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
 import Notification from './components/Notification'
-import Blogs from './components/Blogs'
+import BlogList from './components/BlogList'
 import Blog from './components/Blog'
 import ErrorBoundary from './components/ErrorBoundary'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import useNotification from './hooks/useNotification'
+import useBlogs from './hooks/useBlogs'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const { blogs, isPending } = useBlogs()
   const [user, setUser] = useState(null)
 
   const { displayMessage } = useNotification()
   const navigate = useNavigate()
-  const match = useMatch('/blogs/:id')
-  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
   const userId = user?.id ?? null
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      const blogs = await blogService.getAll()
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(blogs)
-    }
-
-    fetchBlogs()
-  }, [])
+  const match = useMatch('/blogs/:id')
+  const blog =
+    match && !isPending
+      ? blogs.find((blog) => blog.id === match.params.id)
+      : null
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -40,6 +34,10 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  if (isPending) {
+    return <div>Loading</div>
+  }
 
   const loginUser = async (userCredentials) => {
     try {
@@ -59,25 +57,6 @@ const App = () => {
     navigate('/')
   }
 
-  const createBlog = async (newBlogObject) => {
-    try {
-      const newBlog = await blogService.create(newBlogObject)
-      newBlog.user = {
-        username: user.username,
-        name: user.name,
-        id: user.id,
-      }
-      setBlogs(blogs.concat(newBlog))
-      displayMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
-    } catch (error) {
-      const { title, author } = newBlogObject
-      displayMessage(
-        `failed to add blog "${title}" by ${author}. Error: ${error}`,
-        'error',
-      )
-    }
-  }
-
   const likeBlog = async (blogToUpdate) => {
     // increment like of blogToUpdate by one
     try {
@@ -85,11 +64,11 @@ const App = () => {
       const { id, ...blogWithoutId } = updatedBlog
 
       await blogService.update(id, blogWithoutId)
-      setBlogs(
-        blogs
-          .map((blog) => (blog.id === id ? updatedBlog : blog))
-          .sort((a, b) => b.likes - a.likes),
-      )
+      // setBlogs(
+      //   blogs
+      //     .map((blog) => (blog.id === id ? updatedBlog : blog))
+      //     .sort((a, b) => b.likes - a.likes),
+      // )
     } catch (error) {
       displayMessage(
         `Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`,
@@ -106,7 +85,7 @@ const App = () => {
         )
       ) {
         await blogService.remove(blogToRemove.id)
-        setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id))
+        // setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id))
         displayMessage(
           `Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`,
         )
@@ -165,11 +144,8 @@ const App = () => {
             }
           />
           <Route path="/login" element={<LoginForm loginUser={loginUser} />} />
-          <Route
-            path="/create"
-            element={<CreateBlogForm createBlog={createBlog} userId={userId} />}
-          />
-          <Route path="/" element={<Blogs blogs={blogs} />} />
+          <Route path="/create" element={<CreateBlogForm user={user} />} />
+          <Route path="/" element={<BlogList />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </ErrorBoundary>
