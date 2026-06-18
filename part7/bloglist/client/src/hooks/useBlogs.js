@@ -80,6 +80,7 @@ const useBlogs = () => {
     blogs: result.data,
     isPending: result.isPending,
     isError: result.isError,
+    getBlog: (blogId) => result.data?.find((b) => b.id === blogId),
     addBlog: (blog) => newBlogMutation.mutate(blog),
     likeBlog: (blog) =>
       likeBlogMutation.mutate({ ...blog, likes: blog.likes + 1 }),

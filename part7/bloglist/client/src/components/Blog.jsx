@@ -1,20 +1,26 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent, Typography, Button, Link } from '@mui/material'
 
 import useBlogs from '../hooks/useBlogs'
 
-const Blog = ({ blog, userId }) => {
-  const showIfLoggedIn = { display: userId ? '' : 'none' }
-  const showIfUserMatch = { display: userId === blog.user.id ? '' : 'none' }
-
+const Blog = ({ userId }) => {
   const navigate = useNavigate()
-  const { likeBlog, removeBlog } = useBlogs()
+  const { blogId } = useParams()
+  const { isPending, getBlog, likeBlog, removeBlog } = useBlogs()
 
+  if (isPending) {
+    return <div>loading blog...</div>
+  }
+
+  const blog = getBlog(blogId)
   const handleLike = () => likeBlog(blog)
   const handleRemove = () => {
     removeBlog(blog)
     navigate('/')
   }
+
+  const showIfLoggedIn = { display: userId ? '' : 'none' }
+  const showIfUserMatch = { display: userId === blog.user.id ? '' : 'none' }
 
   return (
     <Card className="blog">

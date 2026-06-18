@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, Link, useMatch, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { Container, AppBar, Button, Toolbar, Typography } from '@mui/material'
 
 import LoginForm from './components/LoginForm'
@@ -11,20 +11,13 @@ import ErrorBoundary from './components/ErrorBoundary'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import useNotification from './hooks/useNotification'
-import useBlogs from './hooks/useBlogs'
 
 const App = () => {
-  const { blogs, isPending } = useBlogs()
   const [user, setUser] = useState(null)
 
   const { displayMessage } = useNotification()
   const navigate = useNavigate()
   const userId = user?.id ?? null
-  const match = useMatch('/blogs/:id')
-  const blog =
-    match && !isPending
-      ? blogs.find((blog) => blog.id === match.params.id)
-      : null
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -34,10 +27,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  if (isPending) {
-    return <div>Loading</div>
-  }
 
   const loginUser = async (userCredentials) => {
     try {
@@ -90,10 +79,7 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-          <Route
-            path="/blogs/:id"
-            element={<Blog blog={blog} userId={userId} />}
-          />
+          <Route path="/blogs/:blogId" element={<Blog userId={userId} />} />
           <Route path="/login" element={<LoginForm loginUser={loginUser} />} />
           <Route path="/create" element={<CreateBlogForm user={user} />} />
           <Route path="/" element={<BlogList />} />
