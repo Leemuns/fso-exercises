@@ -1,27 +1,30 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
-import blogService from '../services/blogs'
-import { useNotification } from './useNotification'
+import blogsService from '../services/blogs'
+import useNotification from './useNotification'
 
 const useBlogs = () => {
   const queryClient = useQueryClient()
   const { displayNotification } = useNotification()
+  const navigate = useNavigate()
 
   const result = useQuery({
     queryKey: ['blogs'],
     queryFn: async () => {
-      const data = await blogService.getAll()
+      const data = await blogsService.getAll()
       return data.sort((a, b) => b.likes - a.likes)
     },
     refetchOnWindowFocus: false,
   })
 
   const newBlogMutation = useMutation({
-    mutationFn: blogService.create,
+    mutationFn: blogsService.create,
     onSuccess: (blog) => {
       const blogs = queryClient.getQueryData(['blogs'])
       queryClient.setQueryData(['blogs'], blogs.concat(blog))
       displayNotification(`a new blog ${blog.title} by ${blog.author} added`)
+      navigate('/')
     },
     onError: (error, variables) => {
       const { title, author } = variables
@@ -35,7 +38,7 @@ const useBlogs = () => {
   const likeBlogMutation = useMutation({
     mutationFn: async (blog) => {
       const { id, ...blogWithoutId } = blog
-      await blogService.update(id, blogWithoutId)
+      await blogsService.update(id, blogWithoutId)
       return blog
     },
     onSuccess: (blog) => {
@@ -56,7 +59,7 @@ const useBlogs = () => {
 
   const removeBlogMutation = useMutation({
     mutationFn: async (blog) => {
-      await blogService.remove(blog.id)
+      await blogsService.remove(blog.id)
       return blog
     },
     onSuccess: (blog) => {

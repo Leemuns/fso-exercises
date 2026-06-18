@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 
 import FieldInput from './FieldInput'
 import useBlogs from '../hooks/useBlogs'
 
 const CreateBlogForm = ({ user }) => {
-  const navigate = useNavigate()
   const { addBlog } = useBlogs()
 
   const [title, setTitle] = useState('')
@@ -27,8 +25,6 @@ const CreateBlogForm = ({ user }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
-
-    navigate('/')
   }
 
   if (!user.id) {
