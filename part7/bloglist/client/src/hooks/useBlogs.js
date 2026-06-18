@@ -18,12 +18,10 @@ const useBlogs = () => {
 
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
-    onSuccess: (newBlog) => {
+    onSuccess: (blog) => {
       const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
-      displayNotification(
-        `a new blog ${newBlog.title} by ${newBlog.author} added`,
-      )
+      queryClient.setQueryData(['blogs'], blogs.concat(blog))
+      displayNotification(`a new blog ${blog.title} by ${blog.author} added`)
     },
     onError: (error, variables) => {
       const { title, author } = variables
@@ -34,20 +32,58 @@ const useBlogs = () => {
     },
   })
 
-  // const updateAnecdoteMutation = useMutation({
-  //   mutationFn: updateAnecdote,
-  //   onSuccess: (updatedAnecdote) => {
-  //     const anecdotes = queryClient.getQueryData(['anecdotes'])
-  //     queryClient.setQueryData(['anecdotes'], anecdotes.map(a => a.id === updatedAnecdote.id ? updatedAnecdote : a))
-  //   }
-  // })
+  const likeBlogMutation = useMutation({
+    mutationFn: async (blog) => {
+      const { id, ...blogWithoutId } = blog
+      await blogService.update(id, blogWithoutId)
+      return blog
+    },
+    onSuccess: (blog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map((b) => (b.id === blog.id ? blog : b)),
+      )
+    },
+    onError: (error, variables) => {
+      const { title, author } = variables
+      displayNotification(
+        `failed to like blog "${title}" by ${author}. Error: ${error}`,
+        'error',
+      )
+    },
+  })
+
+  const removeBlogMutation = useMutation({
+    mutationFn: async (blog) => {
+      await blogService.remove(blog.id)
+      return blog
+    },
+    onSuccess: (blog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.filter((b) => b.id !== blog.id),
+      )
+      displayNotification(`Removed blog "${blog.title}" by ${blog.author}`)
+    },
+    onError: (error, variables) => {
+      const { title, author } = variables
+      displayNotification(
+        `failed to remove blog "${title}" by ${author}. Error: ${error}`,
+        'error',
+      )
+    },
+  })
 
   return {
     blogs: result.data,
     isPending: result.isPending,
     isError: result.isError,
-    addBlog: (newBlog) => newBlogMutation.mutate(newBlog),
-    // voteAnecdote: (anecdote) => updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
+    addBlog: (blog) => newBlogMutation.mutate(blog),
+    likeBlog: (blog) =>
+      likeBlogMutation.mutate({ ...blog, likes: blog.likes + 1 }),
+    removeBlog: (blog) => removeBlogMutation.mutate(blog),
   }
 }
 

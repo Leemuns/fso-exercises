@@ -57,48 +57,6 @@ const App = () => {
     navigate('/')
   }
 
-  const likeBlog = async (blogToUpdate) => {
-    // increment like of blogToUpdate by one
-    try {
-      const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
-      const { id, ...blogWithoutId } = updatedBlog
-
-      await blogService.update(id, blogWithoutId)
-      // setBlogs(
-      //   blogs
-      //     .map((blog) => (blog.id === id ? updatedBlog : blog))
-      //     .sort((a, b) => b.likes - a.likes),
-      // )
-    } catch (error) {
-      displayMessage(
-        `Failed to like blog "${blogToUpdate.title}" by ${blogToUpdate.author}. Error: ${error}`,
-        'error',
-      )
-    }
-  }
-
-  const removeBlog = async (blogToRemove) => {
-    try {
-      if (
-        window.confirm(
-          `Remove blog "${blogToRemove.title} by ${blogToRemove.author}"`,
-        )
-      ) {
-        await blogService.remove(blogToRemove.id)
-        // setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id))
-        displayMessage(
-          `Removed blog "${blogToRemove.title}" by ${blogToRemove.author}`,
-        )
-        navigate('/')
-      }
-    } catch (error) {
-      displayMessage(
-        `Failed to remove blog "${blogToRemove.title}" by ${blogToRemove.author}. Error: ${error}`,
-        'error',
-      )
-    }
-  }
-
   return (
     <Container>
       <AppBar position="static">
@@ -134,14 +92,7 @@ const App = () => {
         <Routes>
           <Route
             path="/blogs/:id"
-            element={
-              <Blog
-                blog={blog}
-                likeBlog={likeBlog}
-                removeBlog={removeBlog}
-                userId={userId}
-              />
-            }
+            element={<Blog blog={blog} userId={userId} />}
           />
           <Route path="/login" element={<LoginForm loginUser={loginUser} />} />
           <Route path="/create" element={<CreateBlogForm user={user} />} />
