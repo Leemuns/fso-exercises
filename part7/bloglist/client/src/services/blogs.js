@@ -21,6 +21,17 @@ const create = async (newBlog) => {
   return await response.json()
 }
 
+const createComment = async (blogId, comment) => {
+  const response = await fetch(`${baseUrl}/${blogId}/comments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: token },
+    body: JSON.stringify({ comment }),
+  })
+  if (!response.ok) throw new Error('Failed to create new comment')
+  const newBlog = await response.json()
+  return newBlog
+}
+
 const remove = async (blogId) => {
   const response = await fetch(`${baseUrl}/${blogId}`, {
     method: 'DELETE',
@@ -38,4 +49,4 @@ const update = async (blogId, newBlog) => {
   if (!response.ok) throw new Error('Failed to update blog')
 }
 
-export default { setToken, getAll, create, remove, update }
+export default { setToken, getAll, create, createComment, remove, update }

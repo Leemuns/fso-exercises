@@ -35,6 +35,18 @@ const useBlogs = () => {
     },
   })
 
+  const newCommentMutation = useMutation({
+    mutationFn: ({ blogId, comment }) =>
+      blogsService.createComment(blogId, comment),
+    onSuccess: (blog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map((b) => (b.id === blog.id ? blog : b)),
+      )
+    },
+  })
+
   const likeBlogMutation = useMutation({
     mutationFn: async (blog) => {
       const { id, ...blogWithoutId } = blog
@@ -85,6 +97,8 @@ const useBlogs = () => {
     isError: result.isError,
     getBlog: (blogId) => result.data?.find((b) => b.id === blogId),
     addBlog: (blog) => newBlogMutation.mutate(blog),
+    addComment: (blogId, comment) =>
+      newCommentMutation.mutate({ blogId, comment }),
     likeBlog: (blog) =>
       likeBlogMutation.mutate({ ...blog, likes: blog.likes + 1 }),
     removeBlog: (blog) => removeBlogMutation.mutate(blog),

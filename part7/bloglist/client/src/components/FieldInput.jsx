@@ -1,6 +1,19 @@
 import { TextField } from '@mui/material'
 
 const FieldInput = ({ inputValues, styleType }) => {
+  if (styleType === 'comment') {
+    return (
+      <>
+        <TextField
+          {...inputValues}
+          variant="outlined"
+          size="small"
+          margin="dense"
+        />
+      </>
+    )
+  }
+
   if (styleType === 'login') {
     return (
       <div>

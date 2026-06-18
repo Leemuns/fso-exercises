@@ -9,6 +9,7 @@ const blogSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  comments: [{ text: { type: String } }],
 })
 
 blogSchema.set('toJSON', {
@@ -16,6 +17,14 @@ blogSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+
+    if (returnedObject.comments) {
+      returnedObject.comments = returnedObject.comments.map((c) => {
+        c.id = c._id.toString()
+        delete c._id
+        return c
+      })
+    }
   },
 })
 
