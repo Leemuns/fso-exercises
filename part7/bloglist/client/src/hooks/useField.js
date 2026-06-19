@@ -1,6 +1,11 @@
 import { useState } from 'react'
 
-const useField = (label, styleType, type = 'text') => {
+const useField = ({
+  label,
+  name = label.toLowerCase(),
+  styleType = 'null',
+  type = 'text',
+}) => {
   const [value, setValue] = useState('')
 
   const onChange = (event) => {
@@ -9,8 +14,8 @@ const useField = (label, styleType, type = 'text') => {
 
   return {
     inputValues: {
-      name: label.toLowerCase(),
       label,
+      name,
       value,
       onChange,
       type,

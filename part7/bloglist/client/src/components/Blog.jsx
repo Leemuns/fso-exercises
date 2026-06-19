@@ -19,7 +19,11 @@ const Blog = () => {
   const { blogId } = useParams()
   const { isPending, getBlog, likeBlog, removeBlog, addComment } = useBlogs()
   const { user } = useCurrentUser()
-  const comment = useField('comment', 'comment')
+  const comment = useField({
+    label: 'add a comment',
+    styleType: 'comment',
+    name: 'comment',
+  })
 
   if (isPending) {
     return <div>loading blog...</div>
@@ -87,11 +91,17 @@ const Blog = () => {
           </Button>
         </Typography>
 
-        <Typography variant="body1">comments</Typography>
+        <Typography variant="h6" sx={{ pt: 3.2 }}>
+          comments
+        </Typography>
         <form onSubmit={handleAddComment}>
           <FieldInput {...comment} />
-          <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
-            Add a comment
+          <Button
+            type="submit"
+            variant="contained"
+            style={{ marginTop: 10, marginLeft: 8 }}
+          >
+            Add comment
           </Button>
         </form>
         <List

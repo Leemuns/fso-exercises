@@ -9,9 +9,9 @@ const CreateBlogForm = () => {
   const { addBlog } = useBlogs()
   const { user } = useCurrentUser()
 
-  const title = useField('title', 'create')
-  const author = useField('author', 'create')
-  const url = useField('url', 'create')
+  const title = useField({ label: 'title', styleType: 'create' })
+  const author = useField({ label: 'author', styleType: 'create' })
+  const url = useField({ label: 'url', styleType: 'create' })
 
   const handleAddBlog = (event) => {
     event.preventDefault()

@@ -7,8 +7,12 @@ import FieldInput from './FieldInput'
 const LoginForm = () => {
   const { loginUser } = useCurrentUser()
 
-  const username = useField('username', 'login')
-  const password = useField('password', 'login', 'password')
+  const username = useField({ label: 'username', styleType: 'login' })
+  const password = useField({
+    label: 'password',
+    styleType: 'login',
+    type: 'password',
+  })
 
   const handleLogin = (event) => {
     event.preventDefault()

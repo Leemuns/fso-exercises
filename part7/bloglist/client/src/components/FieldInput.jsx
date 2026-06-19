@@ -2,6 +2,7 @@ import { TextField } from '@mui/material'
 
 const FieldInput = ({ inputValues, styleType }) => {
   if (styleType === 'comment') {
+    console.log(inputValues)
     return (
       <>
         <TextField
