@@ -10,7 +10,7 @@ interface Result {
   average: number;
 }
 
-export function exerciseCalculator(hours: number[], target: number): Result {
+export function calculateExercises(hours: number[], target: number): Result {
   const targetTotal: number = target * hours.length;
   const hoursTotal: number = hours.reduce((a, h) => a + h);
   const isTargetHit: boolean = hoursTotal >= targetTotal;
@@ -43,5 +43,5 @@ if (process.argv[1] === import.meta.filename) {
     throw new Error("Provided values were not numbers!");
   const [target, ...hours] = args;
 
-  console.log(exerciseCalculator(hours, target));
+  console.log(calculateExercises(hours, target));
 }
