@@ -10,7 +10,7 @@ interface Result {
   average: number;
 }
 
-function exerciseCalculator(hours: number[], target: number): Result {
+export function exerciseCalculator(hours: number[], target: number): Result {
   const targetTotal: number = target * hours.length;
   const hoursTotal: number = hours.reduce((a, h) => a + h);
   const isTargetHit: boolean = hoursTotal >= targetTotal;
@@ -36,10 +36,12 @@ function exerciseCalculator(hours: number[], target: number): Result {
   };
 }
 
-const args: number[] = parseArguments(process.argv);
-if (args.length < 2) throw new Error("Not enough arguments");
-if (args.some((a) => isNaN(a)))
-  throw new Error("Provided values were not numbers!");
-const [target, ...hours] = args;
+if (process.argv[1] === import.meta.filename) {
+  const args: number[] = parseArguments(process.argv);
+  if (args.length < 2) throw new Error("Not enough arguments");
+  if (args.some((a) => isNaN(a)))
+    throw new Error("Provided values were not numbers!");
+  const [target, ...hours] = args;
 
-console.log(exerciseCalculator(hours, target));
+  console.log(exerciseCalculator(hours, target));
+}

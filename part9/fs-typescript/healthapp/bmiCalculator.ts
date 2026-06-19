@@ -1,6 +1,6 @@
 import { parseArguments } from "./utils/parseArguments.ts";
 
-function calculateBmi(height: number, mass: number): string {
+export function calculateBmi(height: number, mass: number): string {
   // height in cm, mass in kg
   const bmi: number = mass / (height / 100) ** 2;
 
@@ -22,11 +22,13 @@ function calculateBmi(height: number, mass: number): string {
   return "Obese (Class III)";
 }
 
-const args: number[] = parseArguments(process.argv);
-if (args.length < 2) throw new Error("Not enough arguments");
-if (args.length > 2) throw new Error("Too many arguments");
-if (args.some((a) => isNaN(a)))
-  throw new Error("Provided values were not numbers!");
-const [height, weight]: number[] = args;
+if (process.argv[1] === import.meta.filename) {
+  const args: number[] = parseArguments(process.argv);
+  if (args.length < 2) throw new Error("Not enough arguments");
+  if (args.length > 2) throw new Error("Too many arguments");
+  if (args.some((a) => isNaN(a)))
+    throw new Error("Provided values were not numbers!");
+  const [height, weight]: number[] = args;
 
-console.log(calculateBmi(height, weight));
+  console.log(calculateBmi(height, weight));
+}
